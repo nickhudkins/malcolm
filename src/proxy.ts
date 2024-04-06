@@ -1,4 +1,3 @@
-import path from "path";
 import { spawn } from "child_process";
 import { parse } from "node-html-parser";
 import http from "http";
@@ -18,6 +17,12 @@ export async function run({
 }: ProxyInitializationOptions) {
   return new Promise<void>((resolve) => {
     const server = http.createServer(function (req, res) {
+      if (!req.headers.origin) {
+        res.writeHead(400, { "Content-Type": "text/plain" });
+        res.end("No Origin Header: please provide an origin header.");
+        return;
+      }
+
       const middleware = createProxyMiddleware({
         target: req.headers.origin,
         changeOrigin: true,

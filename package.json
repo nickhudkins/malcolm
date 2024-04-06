@@ -6,6 +6,11 @@
   "bin": {
     "malcolm": "./dist/cli.js"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    }
+  },
   "type": "module",
   "scripts": {
     "start:dev": "npx tsx watch src/cli.ts",
@@ -13,7 +18,10 @@
     "test": "vitest run",
     "build": "tsc  --outDir dist && touch dist/package.json && echo '{ \"type\": \"module\" }' > dist/package.json"
   },
-  "author": "",
+  "authors": [
+    "Nick Hudkins",
+    "Sean Boult"
+  ],
   "license": "ISC",
   "dependencies": {
     "@types/http-proxy": "^1.17.14",
@@ -25,6 +33,7 @@
     "vitest": "^1.4.0"
   },
   "devDependencies": {
-    "@types/node": "^20.12.5"
+    "@types/node": "^20.12.5",
+    "tsx": "^4.7.2"
   }
 }

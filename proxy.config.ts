@@ -1,4 +1,4 @@
-import { type IncomingMessage, type OutgoingMessage } from "http";
+import type { IncomingMessage, OutgoingMessage } from "http";
 import { defineConfig } from "./src/utils.js";
 
 export default defineConfig({

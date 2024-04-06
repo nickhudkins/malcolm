@@ -1,0 +1,2 @@
+export const DEFAULT_PROXY_PORT = 6969;
+export const DEFAULT_TLS_TERMINATON_PORT = 6443;
