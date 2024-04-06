@@ -6,9 +6,9 @@ Clone and `npm run start`
 
 ### Testing
 
-I was testing like this and it did not work 😞
+I was testing like and I got the response!
 ```
-curl -vvv -H "Host: google.com" -H "Origin: https://google.com" https://localhost:6443/test
+curl -vvv -H "Origin: https://google.com" https://localhost:6443/testy
 ```
 
 ❤️ Made with Love by @nickhudkins

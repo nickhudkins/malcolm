@@ -19,10 +19,10 @@ export const tlsTerminatorPort = await getPort({
 function noop() {}
 
 //TODO: Discover Config differently than this lol
-// NOTE: this didnt work when i tried linking it in a test package cause it looked in dist dir
 const {
   default: { handleParsedHTML, handleRequest = noop, handleResponse = noop },
-} = (await import(path.join(process.cwd(), "proxy.config.js"))) as {
+  // TODO: We need to solve this in build mode, not sure if it's "easy" to support TS initially
+} = (await import(path.join(process.cwd(), "proxy.config.ts"))) as {
   default: ProxyConfig;
 };
 

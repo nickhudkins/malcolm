@@ -1,4 +1,4 @@
-import { spawn } from "child_process";
+import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import { parse } from "node-html-parser";
 import http from "http";
 
@@ -8,6 +8,7 @@ import {
 } from "http-proxy-middleware";
 import { ProxyInitializationOptions } from "./types.js";
 
+let caddyProc: ChildProcessWithoutNullStreams; 
 export async function run({
   proxyPort,
   tlsTerminatorPort,
@@ -47,7 +48,7 @@ export async function run({
     });
 
     server.listen(proxyPort, () => {
-      const caddyProc = spawn("caddy", [
+      caddyProc = spawn("caddy", [
         `reverse-proxy`,
         `--from`,
         `localhost:${tlsTerminatorPort}`,
@@ -59,3 +60,9 @@ export async function run({
     });
   });
 }
+
+// Kill caddy process when this process exits
+process.on("exit", (code) => {
+  caddyProc.kill();
+});
+

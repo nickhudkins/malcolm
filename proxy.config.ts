@@ -4,10 +4,12 @@ import { defineConfig } from "./src/utils.js";
 export default defineConfig({
   handleRequest(_, req, __): void {
     console.log(`[🖕] I'll Handle This (${req.headers.origin})`);
-    // D
   },
-  handleResponse(proxyRes: IncomingMessage, res: OutgoingMessage): void {},
+  handleResponse(_proxyRes: IncomingMessage, _res: OutgoingMessage): void {},
   handleParsedHTML(root) {
-    return root;
+    const [html] = root.getElementsByTagName("html");
+    html.innerHTML = "look we can do things to patch content 🥳";
+
+    return html;
   },
 });
