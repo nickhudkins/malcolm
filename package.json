@@ -1,0 +1,30 @@
+{
+  "name": "@nickhudkins/malcolm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/cli.js",
+  "bin": {
+    "malcolm": "./dist/cli.js"
+  },
+  "type": "module",
+  "scripts": {
+    "start:dev": "npx tsx watch src/cli.ts",
+    "start": "npx tsx src/cli.ts",
+    "test": "vitest run",
+    "build": "tsc  --outDir dist && touch dist/package.json && echo '{ \"type\": \"module\" }' > dist/package.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/http-proxy": "^1.17.14",
+    "get-port": "^7.1.0",
+    "http-proxy": "^1.18.1",
+    "http-proxy-middleware": "^3.0.0",
+    "node-html-parser": "^6.1.13",
+    "typescript": "^5.4.4",
+    "vitest": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.5"
+  }
+}
