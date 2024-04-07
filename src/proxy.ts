@@ -1,41 +1,53 @@
 import {
   generateCACertificate,
-  // Can use to trust!
-  generateSPKIFingerprint,
   getLocal,
   matchers,
   requestHandlers,
 } from "mockttp";
-import { parse } from "node-html-parser";
 
 import { ProxyInitializationOptions } from "./types.js";
+import { prepareSystem } from "./system.js";
 
 export async function run({
+  shouldProxy,
   proxyPort,
-  handleParsedHTML,
   handleRequest,
   handleResponse,
 }: ProxyInitializationOptions) {
-  // TODO: Trust these certs bro.
-  const https = await generateCACertificate();
-  const server = getLocal({ https });
+  const httpsOpts = await generateCACertificate();
+
+  /**
+   * Responsible For:
+   * - Generate PAC file
+   * - Confiure System to use PAC file
+   * - Trust generated CA cert
+   */
+  await prepareSystem({ shouldProxy, https: httpsOpts });
+
+  const server = getLocal({ https: httpsOpts });
 
   server.addRequestRules({
-    matchers: [new matchers.HostMatcher("www.google.com")],
+    matchers: [
+      // Realistically, ANYTHING that hits this proxy
+      // has passed through the PAC and is already filtered,
+      // but this should be able to be used WITHOUT PAC, and
+      // therefore we fallback to this callback matcher
+      new matchers.CallbackMatcher((req) => {
+        return shouldProxy(req.url, req.url);
+      }),
+    ],
     handler: new requestHandlers.PassThroughHandler({
       async beforeRequest(req) {
-        handleRequest?.(req);
+        return handleRequest?.(req);
       },
       async beforeResponse(res) {
-        handleResponse?.(res);
-        const resp = await res.body.getText();
-        const $root = handleParsedHTML?.(parse(resp!))!;
-        return {
-          rawBody: Buffer.from($root.toString()),
-        };
+        return handleResponse?.(res);
       },
     }),
   });
 
   await server.start(proxyPort);
+  console.log(
+    `[👴🏻 Malcolm] - Ready and Willing to Serve! (https://localhost:${proxyPort})`
+  );
 }

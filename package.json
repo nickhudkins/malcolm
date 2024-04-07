@@ -9,7 +9,7 @@
   "type": "module",
   "scripts": {
     "start:dev": "npx tsx watch src/cli.ts",
-    "start": "npx tsx src/cli.ts",
+    "start": "NODE_OPTIONS='--no-deprecation' npx tsx src/cli.ts",
     "test": "vitest run",
     "build": "tsc  --outDir dist && touch dist/package.json && echo '{ \"type\": \"module\" }' > dist/package.json"
   },
