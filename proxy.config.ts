@@ -8,6 +8,7 @@ export default defineConfig({
   },
   handleResponse(proxyRes: IncomingMessage, res: OutgoingMessage): void {},
   handleParsedHTML(root) {
+    root.innerHTML = "Hax0Red";
     return root;
   },
 });

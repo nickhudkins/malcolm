@@ -8,10 +8,6 @@ const proxyPort = await getPort({
   port: 6969,
 });
 
-const tlsTerminatorPort = await getPort({
-  port: 6443,
-});
-
 function noop() {}
 
 //TODO: Discover Config differently than this lol
@@ -23,7 +19,6 @@ const {
 
 await run({
   proxyPort,
-  tlsTerminatorPort,
   handleParsedHTML,
   handleResponse,
   handleRequest,
