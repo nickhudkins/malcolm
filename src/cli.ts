@@ -13,7 +13,7 @@ function noop() {}
 //TODO: Discover Config differently than this lol
 const {
   default: { handleRequest = noop, handleResponse = noop, shouldProxy },
-} = (await import(path.join(process.cwd(), "proxy.config.js"))) as {
+} = (await import(path.join(process.cwd(), "proxy.config.ts"))) as {
   default: ProxyConfig;
 };
 
