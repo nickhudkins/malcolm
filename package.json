@@ -1,29 +1,32 @@
 {
   "name": "@nickhudkins/malcolm",
   "version": "1.0.0",
-  "description": "",
-  "main": "dist/cli.js",
+  "description": "A Man-In-The-Middle Proxy for Development!",
+  "files": [
+    "dist"
+  ],
   "bin": {
     "malcolm": "./dist/cli.js"
   },
   "type": "module",
   "scripts": {
-    "start:dev": "npx tsx watch src/cli.ts",
+    "start:dev": "NODE_OPTIONS='--no-deprecation' npx tsx watch src/cli.ts",
     "start": "NODE_OPTIONS='--no-deprecation' npx tsx src/cli.ts",
     "test": "vitest run",
-    "build": "tsc  --outDir dist && touch dist/package.json && echo '{ \"type\": \"module\" }' > dist/package.json"
+    "build": "tsc --outDir dist"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "get-port": "^7.1.0",
     "mockttp": "^3.10.2",
-    "node-html-parser": "^6.1.13"
+    "node-html-parser": "^6.1.13",
+    "tsx": "^4.7.2"
   },
   "devDependencies": {
     "@types/node": "^20.12.5",
+    "https-proxy-agent": "^7.0.4",
     "typescript": "^5.4.4",
-    "vitest": "^1.4.0",
-    "https-proxy-agent": "^7.0.4"
+    "vitest": "^1.4.0"
   }
 }

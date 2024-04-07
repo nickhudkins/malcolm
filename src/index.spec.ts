@@ -23,22 +23,17 @@ test("It Works!", async () => {
 
   const handleRequest = vi.fn();
 
-  const handleParsedHTML = vi
-    .fn()
-    .mockImplementation((root) => (root.innerHTML = "LOL"));
-
   const handleResponse = vi.fn();
 
   await run({
     proxyPort,
     handleRequest,
     handleResponse,
-    handleParsedHTML,
+    shouldProxy: () => true,
   });
 
   await get("https://www.google.com");
 
   expect(handleRequest).toHaveBeenCalled();
-  expect(handleParsedHTML).toHaveBeenCalled();
   expect(handleResponse).toHaveBeenCalled();
 });
