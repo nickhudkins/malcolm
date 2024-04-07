@@ -1,56 +1,41 @@
-import path from "path";
-import { spawn } from "child_process";
-import { parse } from "node-html-parser";
-import http from "http";
-
 import {
-  createProxyMiddleware,
-  responseInterceptor,
-} from "http-proxy-middleware";
+  generateCACertificate,
+  // Can use to trust!
+  generateSPKIFingerprint,
+  getLocal,
+  matchers,
+  requestHandlers,
+} from "mockttp";
+import { parse } from "node-html-parser";
+
 import { ProxyInitializationOptions } from "./types.js";
 
 export async function run({
   proxyPort,
-  tlsTerminatorPort,
+  handleParsedHTML,
   handleRequest,
   handleResponse,
-  handleParsedHTML,
 }: ProxyInitializationOptions) {
-  return new Promise<void>((resolve) => {
-    const server = http.createServer(function (req, res) {
-      const middleware = createProxyMiddleware({
-        target: req.headers.origin,
-        changeOrigin: true,
-        selfHandleResponse: true,
-        on: {
-          proxyReq: (proxyReq, req, res, options) => {
-            handleRequest(proxyReq, req, res, options);
-          },
-          proxyRes: responseInterceptor(async (responseBuffer, proxyRes) => {
-            handleResponse(proxyRes, res);
-            // TODO: Check if it's something needing responsing, then do it.
-            if (proxyRes.headers["content-type"]?.startsWith("text/html")) {
-              const response = responseBuffer.toString("utf8"); // convert buffer to string
-              const root = parse(response);
-              return handleParsedHTML(root).toString();
-            }
-            return responseBuffer;
-          }),
-        },
-      });
-      middleware(req, res);
-    });
+  // TODO: Trust these certs bro.
+  const https = await generateCACertificate();
+  const server = getLocal({ https });
 
-    server.listen(proxyPort, () => {
-      const caddyProc = spawn("caddy", [
-        `reverse-proxy`,
-        `--from`,
-        `localhost:${tlsTerminatorPort}`,
-        `--to`,
-        `localhost:${proxyPort}`,
-      ]);
-      caddyProc.stdout.on("data", (chunk) => console.log(chunk.toString()));
-      resolve();
-    });
+  server.addRequestRules({
+    matchers: [new matchers.HostMatcher("www.google.com")],
+    handler: new requestHandlers.PassThroughHandler({
+      async beforeRequest(req) {
+        handleRequest?.(req);
+      },
+      async beforeResponse(res) {
+        handleResponse?.(res);
+        const resp = await res.body.getText();
+        const $root = handleParsedHTML?.(parse(resp!))!;
+        return {
+          rawBody: Buffer.from($root.toString()),
+        };
+      },
+    }),
   });
+
+  await server.start(proxyPort);
 }
