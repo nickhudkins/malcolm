@@ -1,14 +1,25 @@
-import { type IncomingMessage, type OutgoingMessage } from "http";
+import { parse } from "node-html-parser";
+import {
+  CallbackResponseResult,
+  PassThroughResponse,
+} from "mockttp/dist/rules/requests/request-handler-definitions.js";
+
 import { defineConfig } from "./src/utils.js";
 
 export default defineConfig({
-  handleRequest(_, req, __): void {
-    console.log(`[🖕] I'll Handle This (${req.headers.origin})`);
-    // D
+  shouldProxy(url) {
+    return url.includes("google");
   },
-  handleResponse(proxyRes: IncomingMessage, res: OutgoingMessage): void {},
-  handleParsedHTML(root) {
-    root.innerHTML = "Hax0Red";
-    return root;
+  handleRequest(req): void {
+    console.log(`[👴🏻 Malcolm] - I'll Handle This (${req.url})`);
+  },
+  async handleResponse(
+    res: PassThroughResponse
+  ): Promise<CallbackResponseResult> {
+    const resp = await res.body.getText();
+    const $root = parse(resp!);
+    return {
+      rawBody: Buffer.from($root.toString()),
+    };
   },
 });

@@ -12,14 +12,14 @@ function noop() {}
 
 //TODO: Discover Config differently than this lol
 const {
-  default: { handleParsedHTML, handleRequest = noop, handleResponse = noop },
+  default: { handleRequest = noop, handleResponse = noop, shouldProxy },
 } = (await import(path.join(process.cwd(), "proxy.config.js"))) as {
   default: ProxyConfig;
 };
 
 await run({
   proxyPort,
-  handleParsedHTML,
+  shouldProxy,
   handleResponse,
   handleRequest,
 });
