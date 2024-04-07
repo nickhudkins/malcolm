@@ -1,12 +1,7 @@
-import {
-  generateCACertificate,
-  getLocal,
-  matchers,
-  requestHandlers,
-} from "mockttp";
+import { getLocal, matchers, requestHandlers } from "mockttp";
 
 import { ProxyInitializationOptions } from "./types.js";
-import { prepareSystem } from "./system.js";
+import { prepareSystem, ensureCACertificate } from "./system.js";
 
 export async function run({
   shouldProxy,
@@ -14,7 +9,9 @@ export async function run({
   handleRequest,
   handleResponse,
 }: ProxyInitializationOptions) {
-  const httpsOpts = await generateCACertificate();
+  const httpsOpts = await ensureCACertificate();
+
+  const server = getLocal({ https: httpsOpts });
 
   /**
    * Responsible For:
@@ -22,9 +19,7 @@ export async function run({
    * - Confiure System to use PAC file
    * - Trust generated CA cert
    */
-  await prepareSystem({ shouldProxy, https: httpsOpts });
-
-  const server = getLocal({ https: httpsOpts });
+  await prepareSystem({ shouldProxy, server, https: httpsOpts, proxyPort });
 
   server.addRequestRules({
     matchers: [
