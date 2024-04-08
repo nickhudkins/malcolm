@@ -19,6 +19,11 @@ export default defineConfig({
     if (res.headers["content-type"]?.startsWith("text/html")) {
       const resp = await res.body.getText();
       const $root = parse(resp!);
+      const $title = $root.querySelector("title");
+      if ($title) {
+        $title.innerHTML = "Hi from Malcom!";
+      }
+
       return {
         body: Buffer.from($root.toString()),
       };
