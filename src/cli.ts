@@ -1,21 +1,20 @@
-#!/usr/bin/env tsx
-import path from "path";
+#!/usr/bin/env node
 import getPort from "get-port";
 import { run } from "./proxy.js";
-import { ProxyConfig } from "./types.js";
+import { tsImport } from "tsx/esm/api";
 
 const proxyPort = await getPort({
   port: 6969,
 });
 
-function noop() {}
+function noop() { }
 
-//TODO: Discover Config differently than this lol
+const cwd = process.cwd();
+const module = await tsImport(`${cwd}/proxy.config.ts`, cwd);
+
 const {
   default: { handleRequest = noop, handleResponse = noop, shouldProxy },
-} = (await import(path.join(process.cwd(), "proxy.config.ts"))) as {
-  default: ProxyConfig;
-};
+} = module;
 
 await run({
   proxyPort,

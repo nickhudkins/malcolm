@@ -38,7 +38,7 @@ interface MalcolmSystemConfig {
 }
 
 const home = os.homedir();
-const malcolmHome = path.join(home, ".malcolm");
+export const malcolmHome = path.join(home, ".malcolm");
 
 // TODO: This function is absolute garbage. Fix it Nick.
 export async function ensureCACertificate(): Promise<
