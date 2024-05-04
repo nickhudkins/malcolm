@@ -1,4 +1,4 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env node
 import getPort from "get-port";
 import { run } from "./proxy.js";
 import { tsImport } from "tsx/esm/api";
