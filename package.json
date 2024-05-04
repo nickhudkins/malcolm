@@ -21,7 +21,7 @@
     "get-port": "^7.1.0",
     "mockttp": "^3.10.2",
     "node-html-parser": "^6.1.13",
-    "tsx": "^4.7.2"
+    "tsx": "^4.9.1"
   },
   "devDependencies": {
     "@types/node": "^20.12.5",
