@@ -61,7 +61,7 @@ export async function ensureCACertificate(): Promise<
     });
     writeFileSync(certPath, cert, { encoding: "utf-8" });
     writeFileSync(keyPath, key, { encoding: "utf-8" });
-    // TODO: Trust the generated Certs
+    execSync(`security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ${certPath}`);
     return { key, cert };
   }
   // LOL absolutely not.
