@@ -1,8 +1,7 @@
 import { getLocal, matchers, requestHandlers } from "mockttp";
 
 import { ProxyInitializationOptions } from "./types.js";
-import { prepareSystem, ensureCACertificate, malcolmHome } from "./system.js";
-import { mkdirSync } from "node:fs";
+import { prepareSystem, ensureCACertificate } from "./system.js";
 
 export async function run({
   shouldProxy,
@@ -10,10 +9,6 @@ export async function run({
   handleRequest,
   handleResponse,
 }: ProxyInitializationOptions) {
-  // TODO: move this bu this was to unblock my usage
-  // Ensure Directory Exists
-  mkdirSync(malcolmHome, { recursive: true });
-
   const httpsOpts = await ensureCACertificate();
 
   const server = getLocal({ https: httpsOpts });
@@ -48,6 +43,6 @@ export async function run({
 
   await server.start(proxyPort);
   console.log(
-    `[👴🏻 Malcolm] - Ready and Willing to Serve! (https://localhost:${proxyPort})`,
+    `[👴🏻 Malcolm] - Ready and Willing to Serve! (https://localhost:${proxyPort})`
   );
 }

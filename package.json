@@ -18,14 +18,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@braintree/sanitize-url": "^7.0.1",
     "get-port": "^7.1.0",
-    "mockttp": "^3.10.2",
-    "node-html-parser": "^6.1.13",
     "tsx": "^4.9.1"
   },
   "devDependencies": {
     "@types/node": "^20.12.5",
     "https-proxy-agent": "^7.0.4",
+    "mockttp": "^3.10.2",
+    "node-html-parser": "^6.1.13",
     "typescript": "^5.4.4",
     "vitest": "^1.4.0"
   }
