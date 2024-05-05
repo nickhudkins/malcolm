@@ -5,6 +5,8 @@ import { run } from "./proxy.js";
 import getPort from "get-port";
 import { HttpsProxyAgent } from "https-proxy-agent";
 
+// Acceptable security risk as we're running tests
+// against well known, mocked endpoints
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 test("It Works!", async () => {
@@ -12,7 +14,7 @@ test("It Works!", async () => {
     port: 6969,
   });
   const get = (url: string) => {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>((resolve, _) => {
       const agent = new HttpsProxyAgent(`http://localhost:${proxyPort}`);
 
       https.get(url, { agent }, (res) => {

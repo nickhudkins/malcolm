@@ -1,12 +1,16 @@
-import path from "path";
-import os from "os";
-import { mkdirSync, writeFileSync, readFileSync, statfsSync } from "fs";
+import { mkdirSync, writeFileSync, readFileSync, existsSync } from "fs";
 import { execSync } from "child_process";
 import {
   Mockttp,
   generateCACertificate,
   generateSPKIFingerprint,
 } from "mockttp";
+
+import {
+  DEFAULT_CERT_PATH,
+  DEFAULT_CONFIG_DIR,
+  DEFAULT_KEY_PATH,
+} from "./constants.js";
 
 interface GeneratePacFileInput {
   proxyPort: number;
@@ -37,38 +41,37 @@ interface MalcolmSystemConfig {
   };
 }
 
-const home = os.homedir();
-export const malcolmHome = path.join(home, ".malcolm");
-
-// TODO: This function is absolute garbage. Fix it Nick.
 export async function ensureCACertificate(): Promise<
   MalcolmSystemConfig["https"]
 > {
-  const certPath = path.join(malcolmHome, "malcom-cert.pem");
-  const keyPath = path.join(malcolmHome, "malcolm-key.pem");
-  try {
-    const certExists = Boolean(statfsSync(certPath));
-    const keyExists = Boolean(statfsSync(keyPath));
-    if (certExists && keyExists) {
-      return {
-        cert: readFileSync(certPath, "utf-8"),
-        key: readFileSync(keyPath, "utf-8"),
-      };
-    }
-  } catch (e) {
-    const { key, cert } = await generateCACertificate({
-      commonName: "Malcolm Cert",
-    });
-    writeFileSync(certPath, cert, { encoding: "utf-8" });
-    writeFileSync(keyPath, key, { encoding: "utf-8" });
-    execSync(`security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ${certPath}`);
-    return { key, cert };
+  // Ensure Directory Exists
+  mkdirSync(DEFAULT_CONFIG_DIR, { recursive: true });
+
+  const certExists = existsSync(DEFAULT_CERT_PATH);
+  const keyExists = existsSync(DEFAULT_KEY_PATH);
+
+  // FIXME: This should not only check that the cert exists, but that it is trusted.
+  if (certExists && keyExists) {
+    return {
+      cert: readFileSync(DEFAULT_CERT_PATH, "utf-8"),
+      key: readFileSync(DEFAULT_KEY_PATH, "utf-8"),
+    };
   }
-  // LOL absolutely not.
-  return {
-    cert: "",
-    key: "",
-  };
+
+  // Generate cert
+  const { key, cert } = await generateCACertificate({
+    commonName: "Malcolm Cert",
+    organizationName: "Nick Hudkins",
+  });
+  // Write the cert to disk.
+  writeFileSync(DEFAULT_CERT_PATH, cert, { encoding: "utf-8" });
+  writeFileSync(DEFAULT_KEY_PATH, key, { encoding: "utf-8" });
+
+  // Trust the cert (on Mac OS)
+  execSync(
+    `sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ${DEFAULT_CERT_PATH}`
+  );
+  return { key, cert };
 }
 
 export async function prepareSystem({
@@ -77,9 +80,6 @@ export async function prepareSystem({
   proxyPort,
   https,
 }: MalcolmSystemConfig) {
-  // Ensure Directory Exists
-  mkdirSync(malcolmHome, { recursive: true });
-
   const spkiFingerprint = generateSPKIFingerprint(https.cert);
   console.log(`[SPKI Fingerprint] - ${spkiFingerprint}`);
 
