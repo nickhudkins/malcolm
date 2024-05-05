@@ -11,20 +11,20 @@ import {
   DEFAULT_CONFIG_DIR,
   DEFAULT_KEY_PATH,
 } from "./constants.js";
+import { pacFilterFunction } from "./utils.js";
 
 interface GeneratePacFileInput {
   proxyPort: number;
-  shouldProxy(url: string, host: string): boolean;
+  hosts: string[];
 }
 
 export async function generatePacFile({
-  shouldProxy,
+  hosts,
   proxyPort,
 }: GeneratePacFileInput): Promise<string> {
-  console.log(`[PAC] - ${shouldProxy}`);
   return `function FindProxyForURL(url, host) {
-    function ${shouldProxy};
-    if (shouldProxy(url, host)) {
+    ${pacFilterFunction};
+    if (${pacFilterFunction.name}(${JSON.stringify(hosts)}, host)) {
       return 'PROXY localhost:${proxyPort}; DIRECT';
     }
     return 'DIRECT';
@@ -34,7 +34,7 @@ export async function generatePacFile({
 interface MalcolmSystemConfig {
   proxyPort: number;
   server: Mockttp;
-  shouldProxy(url: string, host: string): boolean;
+  hosts: string[];
   https: {
     cert: string;
     key: string;
@@ -67,7 +67,7 @@ export async function ensureCACertificate(): Promise<
   writeFileSync(DEFAULT_CERT_PATH, cert, { encoding: "utf-8" });
   writeFileSync(DEFAULT_KEY_PATH, key, { encoding: "utf-8" });
 
-  // Trust the cert (on Mac OS)
+  // TODO: Cross Platform Support, and error handling.
   execSync(
     `sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ${DEFAULT_CERT_PATH}`
   );
@@ -75,15 +75,15 @@ export async function ensureCACertificate(): Promise<
 }
 
 export async function prepareSystem({
-  shouldProxy,
+  hosts,
   server,
   proxyPort,
   https,
 }: MalcolmSystemConfig) {
-  const spkiFingerprint = generateSPKIFingerprint(https.cert);
-  console.log(`[SPKI Fingerprint] - ${spkiFingerprint}`);
+  // const spkiFingerprint = generateSPKIFingerprint(https.cert);
+  // console.log(`[SPKI Fingerprint] - ${spkiFingerprint}`);
 
-  const pacFileContents = await generatePacFile({ shouldProxy, proxyPort });
+  const pacFileContents = await generatePacFile({ hosts, proxyPort });
   // Serve the PAC file.
 
   const pacFilePath = "/proxy.pac";
@@ -91,7 +91,7 @@ export async function prepareSystem({
   server.forGet(pacFilePath).thenReply(200, pacFileContents, {
     "content-type": "application/x-ns-proxy-autoconfig",
   });
-  // TODO: Um, this is MacOS specific, and only `Wi-Fi` LOL.
+  // TODO: Cross Platform Support, and error handling.
   execSync(
     `networksetup -setautoproxyurl "Wi-Fi" "https://localhost:${proxyPort}${pacFilePath}"`
   );

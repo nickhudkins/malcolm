@@ -24,14 +24,14 @@ test("It Works!", async () => {
   };
 
   const handleRequest = vi.fn();
-
   const handleResponse = vi.fn();
 
   await run({
     proxyPort,
     handleRequest,
     handleResponse,
-    shouldProxy: () => true,
+    hosts: ["google.com"],
+    shouldIntercept: () => true,
   });
 
   await get("https://www.google.com");
