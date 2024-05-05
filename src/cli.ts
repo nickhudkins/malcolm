@@ -15,12 +15,18 @@ const userConfigPath = join(process.cwd(), "proxy.config.ts");
 const userConfig = await tsImport(userConfigPath, import.meta.url);
 
 const {
-  default: { handleRequest = noop, handleResponse = noop, shouldProxy },
+  default: {
+    handleRequest = noop,
+    handleResponse = noop,
+    shouldIntercept,
+    hosts = [],
+  },
 } = userConfig;
 
 await run({
+  hosts,
   proxyPort,
-  shouldProxy,
+  shouldIntercept,
   handleResponse,
   handleRequest,
 });
