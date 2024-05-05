@@ -13,7 +13,7 @@ export default {
   },
   handleRequest(req): void {
     const url = new URL(req.url);
-    const logMsg = `[👴🏻 Malcolm] - I'll Handle This (${url.host})`;
+    const logMsg = `${LOG_PREFIX} I'll Handle This (${url.host})`;
     console.log(logMsg);
   },
   async handleResponse(
