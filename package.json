@@ -1,6 +1,6 @@
 {
   "name": "@nickhudkins/malcolm",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A Man-In-The-Middle Proxy for Development!",
   "files": [
     "dist"
