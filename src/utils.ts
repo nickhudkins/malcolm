@@ -1,5 +1,6 @@
 import { ProxyConfig } from "./types.js";
 
+/** Helper function to define a malcolm config */
 export function defineConfig<ContextT>(config: ProxyConfig<ContextT>) {
   return config;
 }
