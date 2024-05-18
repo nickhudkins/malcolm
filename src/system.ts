@@ -1,5 +1,6 @@
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from "fs";
 import { execSync } from "child_process";
+import { get_active_interface } from "network";
 import {
   Mockttp,
   generateCACertificate,
@@ -91,8 +92,13 @@ export async function prepareSystem({
   server.forGet(pacFilePath).thenReply(200, pacFileContents, {
     "content-type": "application/x-ns-proxy-autoconfig",
   });
-  // TODO: Cross Platform Support, and error handling.
-  execSync(
-    `networksetup -setautoproxyurl "Wi-Fi" "https://localhost:${proxyPort}${pacFilePath}"`
-  );
+
+  get_active_interface((_, { desc: InterfaceName }) => {
+    console.log(`Configuring [${InterfaceName}]...`);
+
+    // TODO: Cross Platform Support, and error handling.
+    execSync(
+      `networksetup -setautoproxyurl "${InterfaceName}" "https://localhost:${proxyPort}${pacFilePath}"`
+    );
+  });
 }

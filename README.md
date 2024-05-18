@@ -7,23 +7,24 @@ It's Man-In-The-Middle-Proxy for Development
 Create a `proxy.config.ts`:
 
 ```typescript
-export default {
-  shouldProxy(origin) {
-    return origin.includes("google.com");
-  },
-  handleRequest(req): void {
+
+import { defineConfig } from "@nickhudkins/malcolm";
+
+export default defineConfig({
+  hosts: ["google.com"],
+  handleRequest: async (req) => {
     const url = new URL(req.url);
-    const logMsg = `${LOG_PREFIX} I'll Handle This (${url.host})`;
-    console.log(logMsg);
-  },
-  async handleResponse(
-    res: PassThroughResponse
-  ): Promise<CallbackResponseResult | undefined> {
-    if (res.headers["content-type"]?.startsWith("text/html")) {
-      return {
-        body: Buffer.from(`Hi from Malcolm!`),
-      };
+    return {
+      ctx: {
+        requestURL: url,
+      }
     }
+  },
+  handleResponse: (
+    res: PassThroughResponse,
+    ctx
+  ) => {
+    // I have `ctx`! which is provided by the above
     return;
   },
 };
