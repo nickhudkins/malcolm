@@ -11,12 +11,7 @@ export async function create({ port: proxyPort }: CreateProxyOptions) {
   const server = getLocal({ https: httpsOpts });
   let isServerRunning = false;
 
-  return async function run({
-    hosts,
-    shouldIntercept,
-    handleRequest,
-    handleResponse,
-  }: ProxyInitializationOptions) {
+  return async function run({ hosts, shouldIntercept, handleRequest, handleResponse }: ProxyInitializationOptions) {
     const requestCtx = new Map<string, any>();
     const skipRequestMap = new Map<string, boolean>();
 
@@ -42,7 +37,7 @@ export async function create({ port: proxyPort }: CreateProxyOptions) {
         // has passed through the PAC and is already filtered,
         // but this should be able to be used WITHOUT PAC, and
         // therefore we fallback to this callback matcher.
-        new matchers.CallbackMatcher((req) => {
+        new matchers.CallbackMatcher(req => {
           const { host } = new URL(req.url);
           return pacFilterFunction(hosts, host);
         }),
@@ -79,9 +74,7 @@ export async function create({ port: proxyPort }: CreateProxyOptions) {
     });
 
     console.log(
-      `${LOG_PREFIX} - ${chalk.green(
-        `Ready and Willing to Serve!`
-      )} (${chalk.blue(`https://localhost:${proxyPort}`)})`
+      `${LOG_PREFIX} - ${chalk.green(`Ready and Willing to Serve!`)} (${chalk.blue(`https://localhost:${proxyPort}`)})`,
     );
   };
 }

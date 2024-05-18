@@ -4,16 +4,9 @@ import { get_active_interface as getActiveInterface } from "network";
 
 import { platform } from "os";
 
-import {
-  Mockttp,
-  generateCACertificate,
-} from "mockttp";
+import { Mockttp, generateCACertificate } from "mockttp";
 
-import {
-  DEFAULT_CERT_PATH,
-  DEFAULT_CONFIG_DIR,
-  DEFAULT_KEY_PATH,
-} from "./constants.js";
+import { DEFAULT_CERT_PATH, DEFAULT_CONFIG_DIR, DEFAULT_KEY_PATH } from "./constants.js";
 import { pacFilterFunction } from "./utils.js";
 
 interface GeneratePacFileInput {
@@ -21,10 +14,7 @@ interface GeneratePacFileInput {
   hosts: string[];
 }
 
-export async function generatePacFile({
-  hosts,
-  proxyPort,
-}: GeneratePacFileInput): Promise<string> {
+export async function generatePacFile({ hosts, proxyPort }: GeneratePacFileInput): Promise<string> {
   return `function FindProxyForURL(url, host) {
     ${pacFilterFunction};
     if (${pacFilterFunction.name}(${JSON.stringify(hosts)}, host)) {
@@ -44,9 +34,7 @@ interface MalcolmSystemConfig {
   };
 }
 
-export async function ensureCACertificate(): Promise<
-  MalcolmSystemConfig["https"]
-> {
+export async function ensureCACertificate(): Promise<MalcolmSystemConfig["https"]> {
   // Ensure Directory Exists
   mkdirSync(DEFAULT_CONFIG_DIR, { recursive: true });
 
@@ -54,12 +42,9 @@ export async function ensureCACertificate(): Promise<
   const keyExists = existsSync(DEFAULT_KEY_PATH);
 
   if (certExists && keyExists) {
-
     // check if the cert is trusted
     try {
-      const { status } = spawnSync(
-        `security verify-cert -c ${DEFAULT_CERT_PATH}`,
-      );
+      const { status } = spawnSync(`security verify-cert -c ${DEFAULT_CERT_PATH}`);
 
       if (status !== 0) {
         console.log("🔓 Cert is not trusted, re-trusting it");
@@ -75,9 +60,8 @@ export async function ensureCACertificate(): Promise<
         key: readFileSync(DEFAULT_KEY_PATH, "utf-8"),
       };
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
-
   }
 
   // Generate cert
@@ -91,18 +75,11 @@ export async function ensureCACertificate(): Promise<
   writeFileSync(DEFAULT_KEY_PATH, key, { encoding: "utf-8" });
 
   // TODO: Cross Platform Support, and error handling.
-  execSync(
-    `sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ${DEFAULT_CERT_PATH}`,
-  );
+  execSync(`sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ${DEFAULT_CERT_PATH}`);
   return { key, cert };
 }
 
-export async function prepareSystem({
-  hosts,
-  server,
-  proxyPort,
-  https,
-}: MalcolmSystemConfig) {
+export async function prepareSystem({ hosts, server, proxyPort, https }: MalcolmSystemConfig) {
   // const spkiFingerprint = generateSPKIFingerprint(https.cert);
   // console.log(`[SPKI Fingerprint] - ${spkiFingerprint}`);
 
@@ -120,7 +97,6 @@ export async function prepareSystem({
 
     // TODO: Cross Platform Support, and error handling.
     if (platform() === "darwin") {
-
       // make sure the interface is right because reasons
       const networkInterfaceName = getNetworkAliasForMac(interfacesName);
 
@@ -132,14 +108,10 @@ export async function prepareSystem({
 }
 
 export function getNetworkAliasForMac(networkName: string) {
-  const allNetworkIntefaces = execSync(
-    "networksetup -listnetworkserviceorder | tail -n+2",
-  )
-    .toString()
-    .split(/^\n/im);
+  const allNetworkIntefaces = execSync("networksetup -listnetworkserviceorder | tail -n+2").toString().split(/^\n/im);
 
   let cleanedName;
-  allNetworkIntefaces.filter((networkInterface) => {
+  allNetworkIntefaces.filter(networkInterface => {
     const foundInterace = networkInterface.includes(networkName);
 
     if (foundInterace) {
