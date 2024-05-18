@@ -1,6 +1,9 @@
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from "fs";
 import { execSync } from "child_process";
-import { get_active_interface } from "network";
+import { get_active_interface as getActiveInterface } from "network";
+
+import { platform } from "os";
+
 import {
   Mockttp,
   generateCACertificate,
@@ -70,7 +73,7 @@ export async function ensureCACertificate(): Promise<
 
   // TODO: Cross Platform Support, and error handling.
   execSync(
-    `sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ${DEFAULT_CERT_PATH}`
+    `sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ${DEFAULT_CERT_PATH}`,
   );
   return { key, cert };
 }
@@ -93,12 +96,40 @@ export async function prepareSystem({
     "content-type": "application/x-ns-proxy-autoconfig",
   });
 
-  get_active_interface((_, { desc: InterfaceName }) => {
-    console.log(`Configuring [${InterfaceName}]...`);
+  getActiveInterface((_, { desc: interfacesName }) => {
+    console.log(`Configuring [${interfacesName}]...`);
 
     // TODO: Cross Platform Support, and error handling.
-    execSync(
-      `networksetup -setautoproxyurl "${InterfaceName}" "https://localhost:${proxyPort}${pacFilePath}"`
-    );
+    if (platform() === "darwin") {
+
+      // make sure the interface is right because reasons
+      const networkInterfaceName = getNetworkAliasForMac(interfacesName);
+
+      execSync(
+        `networksetup -setautoproxyurl "${networkInterfaceName}" "https://localhost:${proxyPort}${pacFilePath}"`,
+      );
+    }
   });
+}
+
+export function getNetworkAliasForMac(networkName: string) {
+  const allNetworkIntefaces = execSync(
+    "networksetup -listnetworkserviceorder | tail -n+2",
+  )
+    .toString()
+    .split(/^\n/im);
+
+  let cleanedName;
+  allNetworkIntefaces.filter((networkInterface) => {
+    const foundInterace = networkInterface.includes(networkName);
+
+    if (foundInterace) {
+      const [firstLine] = networkInterface.split("\n");
+
+      // clean the first line, remove the prefix
+      cleanedName = firstLine.replace(/\(\d+\)\s+/gim, "");
+    }
+  });
+
+  return cleanedName;
 }
