@@ -11,3 +11,6 @@ export const DEFAULT_KEY_PATH = join(DEFAULT_CONFIG_DIR, "malcolm-key.pem");
 export const DEFAULT_PROXY_PORT = 6969;
 
 export const LOG_PREFIX = "[" + chalk.yellow(`👴🏻 Malcolm`) + "]";
+
+// Errors!
+export const ConfigurationMissingErrorName = "ConfigurationMissingError";
