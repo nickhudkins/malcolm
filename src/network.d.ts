@@ -3,6 +3,6 @@ declare module "network" {
     desc: string;
   }
   export const get_active_interface: (
-    cb: (err: Error, NetworkInterface) => void
+    cb: (err: Error, interface: NetworkInterface) => void
   ) => void;
 }
