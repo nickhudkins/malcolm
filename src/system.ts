@@ -1,5 +1,5 @@
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from "fs";
-import { execSync } from "child_process";
+import { execSync, spawnSync } from "child_process";
 import { get_active_interface as getActiveInterface } from "network";
 
 import { platform } from "os";
@@ -7,7 +7,6 @@ import { platform } from "os";
 import {
   Mockttp,
   generateCACertificate,
-  generateSPKIFingerprint,
 } from "mockttp";
 
 import {
@@ -54,12 +53,31 @@ export async function ensureCACertificate(): Promise<
   const certExists = existsSync(DEFAULT_CERT_PATH);
   const keyExists = existsSync(DEFAULT_KEY_PATH);
 
-  // FIXME: This should not only check that the cert exists, but that it is trusted.
   if (certExists && keyExists) {
-    return {
-      cert: readFileSync(DEFAULT_CERT_PATH, "utf-8"),
-      key: readFileSync(DEFAULT_KEY_PATH, "utf-8"),
-    };
+
+    // check if the cert is trusted
+    try {
+      const { status } = spawnSync(
+        `security verify-cert -c ${DEFAULT_CERT_PATH}`,
+      );
+
+      if (status !== 0) {
+        console.log("🔓 Cert is not trusted, re-trusting it");
+
+        // find the cert and trust it
+        execSync(
+          `sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ${DEFAULT_CERT_PATH}`,
+        );
+      }
+
+      return {
+        cert: readFileSync(DEFAULT_CERT_PATH, "utf-8"),
+        key: readFileSync(DEFAULT_KEY_PATH, "utf-8"),
+      };
+    } catch (e) {
+      console.error(e)
+    }
+
   }
 
   // Generate cert
@@ -67,6 +85,7 @@ export async function ensureCACertificate(): Promise<
     commonName: "Malcolm Cert",
     organizationName: "Nick Hudkins",
   });
+
   // Write the cert to disk.
   writeFileSync(DEFAULT_CERT_PATH, cert, { encoding: "utf-8" });
   writeFileSync(DEFAULT_KEY_PATH, key, { encoding: "utf-8" });
