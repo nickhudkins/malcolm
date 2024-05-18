@@ -19,7 +19,8 @@
     "start:dev": "NODE_OPTIONS='--no-deprecation' npx tsx watch src/cli.ts",
     "start": "NODE_OPTIONS='--no-deprecation' npx tsx src/cli.ts",
     "test": "vitest run",
-    "build": "tsc --outDir dist"
+    "tsc:watch": "tsc -w",
+    "build": "tsc"
   },
   "author": "",
   "license": "ISC",
