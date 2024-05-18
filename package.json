@@ -20,6 +20,7 @@
     "start:dev": "NODE_OPTIONS='--no-deprecation' npx tsx watch src/cli.ts",
     "start": "NODE_OPTIONS='--no-deprecation' npx tsx src/cli.ts",
     "test": "vitest run",
+    "format": "prettier --write .",
     "tsc:watch": "tsc -w",
     "build": "tsc"
   },
