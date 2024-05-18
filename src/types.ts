@@ -17,6 +17,7 @@ export interface ProxyConfig<ContextT> {
   ) => MaybePromise<CallbackResponseResult | void> | void;
 }
 
-export interface ProxyInitializationOptions extends ProxyConfig<any> {
-  proxyPort: number;
+export interface ProxyInitializationOptions extends ProxyConfig<any> {}
+export interface CreateProxyOptions {
+  port: number;
 }

@@ -1,3 +1,5 @@
+import { promises as fs } from "fs";
+import { createHash } from "crypto";
 import { ProxyConfig } from "./types.js";
 
 /** Helper function to define a malcolm config */
@@ -15,4 +17,32 @@ export function defineConfig<ContextT>(config: ProxyConfig<ContextT>) {
  */
 export function pacFilterFunction(hosts: string[], host: string) {
   return hosts.some((_) => host.endsWith(_));
+}
+
+export function noop() {}
+
+async function getFileHash(filePath: string) {
+  const fileBuffer = await fs.readFile(filePath);
+  return createHash("md5").update(fileBuffer).digest("hex");
+}
+
+export async function createFileWatcher(
+  filePath: string,
+  onChange: () => void
+) {
+  try {
+    const configWatcher = fs.watch(filePath);
+    let previousFileHash = getFileHash(filePath);
+
+    for await (const event of configWatcher) {
+      if (event.eventType !== "change") continue;
+      const newFileHash = getFileHash(filePath);
+      if (previousFileHash !== newFileHash) {
+        onChange();
+        previousFileHash = newFileHash;
+      }
+    }
+  } catch (err: any) {
+    if (err.name === "AbortError") throw err;
+  }
 }
