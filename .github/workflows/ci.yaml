@@ -31,7 +31,7 @@ jobs:
       - name: Install
         run: npm ci
       - name: Check format
-        run: npm check:format
+        run: npm run check:format
 
   build:
     runs-on: ubuntu-latest
