@@ -4,7 +4,7 @@ import { get_active_interface as getActiveInterface } from "network";
 
 import { platform } from "os";
 
-import { Mockttp, generateCACertificate, generateSPKIFingerprint } from "mockttp";
+import { Mockttp, generateCACertificate } from "mockttp";
 
 import { DEFAULT_CERT_PATH, DEFAULT_CONFIG_DIR, DEFAULT_KEY_PATH } from "./constants.js";
 import { pacFilterFunction } from "./utils.js";
@@ -63,7 +63,7 @@ export async function ensureCACertificate(): Promise<MalcolmSystemConfig["https"
   return { key, cert };
 }
 
-export async function prepareSystem({ hosts, server, proxyPort, https }: MalcolmSystemConfig) {
+export async function prepareSystem({ hosts, server, proxyPort }: MalcolmSystemConfig) {
   // const spkiFingerprint = generateSPKIFingerprint(https.cert);
   // console.log(`[SPKI Fingerprint] - ${spkiFingerprint}`);
 

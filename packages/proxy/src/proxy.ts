@@ -14,7 +14,7 @@ export async function create({ port: proxyPort }: CreateProxyOptions) {
   return async function start(config: ProxyInitializationOptions) {
     const { hosts, shouldIntercept, handleRequest, handleResponse } = config;
 
-    const requestCtx = new Map<string, any>();
+    const requestCtx = new Map<string, unknown>();
     const skipRequestMap = new Map<string, boolean>();
 
     /**

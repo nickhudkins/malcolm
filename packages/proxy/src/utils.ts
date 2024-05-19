@@ -39,7 +39,7 @@ export async function createFileWatcher(filePath: string, onChange: () => void) 
         previousFileHash = newFileHash;
       }
     }
-  } catch (err: any) {
-    if (err.name === "AbortError") throw err;
+  } catch (err: unknown) {
+    if (err instanceof Error && err.name === "AbortError") throw err;
   }
 }

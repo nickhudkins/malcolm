@@ -12,7 +12,7 @@ export interface ProxyConfig<ContextT> {
   handleResponse?: (res: PassThroughResponse, ctx: ContextT) => MaybePromise<CallbackResponseResult | void> | void;
 }
 
-export interface ProxyInitializationOptions extends ProxyConfig<any> {}
+export interface ProxyInitializationOptions extends ProxyConfig<unknown> {}
 export interface CreateProxyOptions {
   port: number;
 }
