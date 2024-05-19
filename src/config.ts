@@ -5,6 +5,8 @@ import { ProxyInitializationOptions } from "./types.js";
 import { ConfigurationMissingErrorName } from "./constants.js";
 
 export async function getProxyConfig(configPath: string): Promise<ProxyInitializationOptions> {
+  await validateUserConfig(configPath);
+
   const userConfig = await tsImport(configPath, import.meta.url);
   const {
     default: { handleRequest = noop, handleResponse = noop, shouldIntercept, hosts = [] },
