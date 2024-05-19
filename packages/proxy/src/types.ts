@@ -12,6 +12,7 @@ export interface ProxyConfig<ContextT> {
   handleResponse?: (res: PassThroughResponse, ctx: ContextT) => MaybePromise<CallbackResponseResult | void> | void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ProxyInitializationOptions extends ProxyConfig<unknown> {}
 export interface CreateProxyOptions {
   port: number;
