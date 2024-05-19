@@ -8,13 +8,8 @@ import {
 export interface ProxyConfig<ContextT> {
   hosts: string[];
   shouldIntercept: (req: CompletedRequest) => boolean;
-  handleRequest?: (
-    req: CompletedRequest
-  ) => MaybePromise<(CallbackRequestResult & { ctx?: ContextT }) | void> | void;
-  handleResponse?: (
-    res: PassThroughResponse,
-    ctx: ContextT
-  ) => MaybePromise<CallbackResponseResult | void> | void;
+  handleRequest?: (req: CompletedRequest) => MaybePromise<(CallbackRequestResult & { ctx?: ContextT }) | void> | void;
+  handleResponse?: (res: PassThroughResponse, ctx: ContextT) => MaybePromise<CallbackResponseResult | void> | void;
 }
 
 export interface ProxyInitializationOptions extends ProxyConfig<any> {}
