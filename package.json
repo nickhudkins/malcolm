@@ -20,6 +20,8 @@
     "start:dev": "NODE_OPTIONS='--no-deprecation' npx tsx watch src/cli.ts",
     "start": "NODE_OPTIONS='--no-deprecation' npx tsx src/cli.ts",
     "test": "vitest run",
+    "format": "prettier --write .",
+    "check:format": "prettier --check \"**/*.{ts,js,md}\"",
     "tsc:watch": "tsc -w",
     "build": "tsc"
   },
@@ -34,9 +36,10 @@
     "tsx": "^4.9.1"
   },
   "devDependencies": {
+    "@types/node": "^20.12.5",
     "https-proxy-agent": "^7.0.4",
     "node-html-parser": "^6.1.13",
-    "@types/node": "^20.12.5",
+    "prettier": "^3.2.5",
     "typescript": "^5.4.4",
     "vitest": "^1.4.0"
   }

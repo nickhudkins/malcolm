@@ -4,17 +4,10 @@ import { noop } from "./utils.js";
 import { ProxyInitializationOptions } from "./types.js";
 import { ConfigurationMissingErrorName } from "./constants.js";
 
-export async function getProxyConfig(
-  configPath: string
-): Promise<ProxyInitializationOptions> {
+export async function getProxyConfig(configPath: string): Promise<ProxyInitializationOptions> {
   const userConfig = await tsImport(configPath, import.meta.url);
   const {
-    default: {
-      handleRequest = noop,
-      handleResponse = noop,
-      shouldIntercept,
-      hosts = [],
-    },
+    default: { handleRequest = noop, handleResponse = noop, shouldIntercept, hosts = [] },
   } = userConfig;
   return {
     hosts,
@@ -34,9 +27,7 @@ export async function validateUserConfig(filePath: string) {
 
 class ConfigurationMissingError extends Error {
   constructor() {
-    super(
-      `[${ConfigurationMissingErrorName}]: Please ensure a \`proxy.config.ts\` file is present.`
-    );
+    super(`[${ConfigurationMissingErrorName}]: Please ensure a \`proxy.config.ts\` file is present.`);
     this.name = ConfigurationMissingErrorName;
   }
 }

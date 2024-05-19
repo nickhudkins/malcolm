@@ -17,7 +17,7 @@ test("It Works!", async () => {
     return new Promise<void>((resolve, _) => {
       const agent = new HttpsProxyAgent(`http://localhost:${proxyPort}`);
 
-      https.get(url, { agent }, (res) => {
+      https.get(url, { agent }, res => {
         resolve();
       });
     });

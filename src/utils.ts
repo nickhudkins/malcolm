@@ -16,7 +16,7 @@ export function defineConfig<ContextT>(config: ProxyConfig<ContextT>) {
  * handlers. Otherwise we will end up with unmatched routes.
  */
 export function pacFilterFunction(hosts: string[], host: string) {
-  return hosts.some((_) => host.endsWith(_));
+  return hosts.some(_ => host.endsWith(_));
 }
 
 export function noop() {}
@@ -26,10 +26,7 @@ async function getFileHash(filePath: string) {
   return createHash("md5").update(fileBuffer).digest("hex");
 }
 
-export async function createFileWatcher(
-  filePath: string,
-  onChange: () => void
-) {
+export async function createFileWatcher(filePath: string, onChange: () => void) {
   try {
     const configWatcher = fs.watch(filePath);
     let previousFileHash = getFileHash(filePath);
