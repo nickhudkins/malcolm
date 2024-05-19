@@ -19,3 +19,6 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           provenance: true
+permissions:
+  contents: write
+  id-token: write
