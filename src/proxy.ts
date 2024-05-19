@@ -11,7 +11,9 @@ export async function create({ port: proxyPort }: CreateProxyOptions) {
   const server = getLocal({ https: httpsOpts });
   let isServerRunning = false;
 
-  return async function run({ hosts, shouldIntercept, handleRequest, handleResponse }: ProxyInitializationOptions) {
+  return async function start(config: ProxyInitializationOptions) {
+    const { hosts, shouldIntercept, handleRequest, handleResponse } = config;
+
     const requestCtx = new Map<string, any>();
     const skipRequestMap = new Map<string, boolean>();
 
