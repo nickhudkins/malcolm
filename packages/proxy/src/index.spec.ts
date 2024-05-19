@@ -1,7 +1,7 @@
 import * as https from "https";
 import { vi, test, expect } from "vitest";
 
-import { run } from "./proxy.js";
+import { create } from "./proxy.js";
 import getPort from "get-port";
 import { HttpsProxyAgent } from "https-proxy-agent";
 
@@ -26,8 +26,9 @@ test("It Works!", async () => {
   const handleRequest = vi.fn();
   const handleResponse = vi.fn();
 
-  await run({
-    proxyPort,
+  const start = await create({ port: proxyPort });
+
+  await start({
     handleRequest,
     handleResponse,
     hosts: ["google.com"],
