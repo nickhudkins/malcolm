@@ -1,0 +1,29 @@
+{
+  "name": "@nickhudkins/malcolm-contrib",
+  "version": "0.2.1",
+  "description": "A set of easy to use things to make Malcom even better!",
+  "repository": {
+    "url": "https://github.com/nickhudkins/malcolm"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "format": "prettier --write .",
+    "check:format": "prettier --check \"**/*.{ts,js,md}\"",
+    "tsc:watch": "tsc -w",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}

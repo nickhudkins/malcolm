@@ -1,51 +1,30 @@
 {
-  "name": "@nickhudkins/malcolm",
+  "name": "@nickhudkins/malcolm-root",
   "version": "0.2.1",
   "description": "A Man-In-The-Middle Proxy for Development!",
   "repository": {
     "url": "https://github.com/nickhudkins/malcolm"
   },
-  "files": [
-    "dist"
+  "workspaces": [
+    "packages/*"
   ],
-  "bin": {
-    "malcolm": "dist/cli.js"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
-    }
+  "scripts": {
+    "start": "turbo run start",
+    "test": "turbo run test",
+    "format": "turbo run format",
+    "check:format": "turbo run check:format",
+    "build": "turbo run build"
   },
   "type": "module",
-  "scripts": {
-    "start:dev": "NODE_OPTIONS='--no-deprecation' npx tsx watch src/cli.ts",
-    "start": "NODE_OPTIONS='--no-deprecation' npx tsx src/cli.ts",
-    "test": "vitest run",
-    "format": "prettier --write .",
-    "check:format": "prettier --check \"**/*.{ts,js,md}\"",
-    "tsc:watch": "tsc -w",
-    "build": "tsc"
-  },
-  "author": "",
+  "author": "Nick Hudkins",
   "license": "ISC",
-  "dependencies": {
-    "@braintree/sanitize-url": "^7.0.1",
-    "@types/yargs": "^17.0.32",
-    "chalk": "^5.3.0",
-    "get-port": "^7.1.0",
-    "mockttp": "^3.10.2",
-    "network": "^0.7.0",
-    "tsx": "^4.9.1",
-    "yargs": "^17.7.2"
-  },
   "devDependencies": {
-    "@types/node": "^20.12.5",
-    "https-proxy-agent": "^7.0.4",
-    "node-html-parser": "^6.1.13",
+    "@types/node": "^20.12.12"
+  },
+  "dependencies": {
     "prettier": "^3.2.5",
-    "typescript": "^5.4.4",
-    "vitest": "^1.4.0"
+    "turbo": "^1.13.3",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
   }
 }

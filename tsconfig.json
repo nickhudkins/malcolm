@@ -1,18 +1,4 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["ESNext"],
-    "outDir": "./dist",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "noEmit": false,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "declaration": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true
-  },
-  "include": ["src"],
-  "exclude": ["**/*.spec.ts"]
+  "files": [],
+  "references": [{ "path": "./packages/proxy" }, { "path": "./packages/contrib" }]
 }
