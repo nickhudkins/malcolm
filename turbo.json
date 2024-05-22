@@ -5,6 +5,7 @@
     "test": {},
     "format": {},
     "check:format": {},
+    "check:lint": {},
     "build": {}
   }
 }

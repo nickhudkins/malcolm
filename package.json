@@ -14,6 +14,7 @@
     "test": "turbo run test",
     "format": "turbo run format",
     "check:format": "turbo run check:format",
+    "check:lint": "turbo run check:lint",
     "build": "turbo run build"
   },
   "type": "module",

@@ -19,6 +19,7 @@
   "scripts": {
     "format": "prettier --write .",
     "check:format": "prettier --check \"**/*.{ts,js,md}\"",
+    "check:lint": "eslint",
     "tsc:watch": "tsc -w",
     "build": "tsc"
   },
