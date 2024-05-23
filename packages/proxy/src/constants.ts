@@ -13,10 +13,10 @@ export const DEFAULT_KEY_PATH = join(DEFAULT_CONFIG_DIR, "malcolm-key.pem");
 
 export const DEFAULT_PROXY_PORT = 6969;
 
-export const LOG_PREFIX = "[" + chalk.yellow(`👴🏻 Malcolm`) + "]";
+export const LOG_PREFIX = "[" + chalk.yellow("👴🏻 Malcolm") + "]";
 
 // Errors!
 export const ConfigurationMissingErrorName = "ConfigurationMissingError";
 
-const DESCRIPTION = `A Man in The Middle Proxy so that you can ✨ Test in Prod ✨`;
+const DESCRIPTION = "A Man in The Middle Proxy so that you can ✨ Test in Prod ✨";
 export const USAGE_BANNER = `${DESCRIPTION}`;

@@ -4,6 +4,7 @@
     "start": {},
     "test": {},
     "format": {},
+    "lint": {},
     "check:format": {},
     "check:lint": {},
     "build": {}

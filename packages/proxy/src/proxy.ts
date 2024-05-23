@@ -76,7 +76,7 @@ export async function create({ port: proxyPort }: CreateProxyOptions) {
     });
 
     console.log(
-      `${LOG_PREFIX} - ${chalk.green(`Ready and Willing to Serve!`)} (${chalk.blue(`https://localhost:${proxyPort}`)})`,
+      `${LOG_PREFIX} - ${chalk.green("Ready and Willing to Serve!")} (${chalk.blue(`https://localhost:${proxyPort}`)})`,
     );
   };
 }

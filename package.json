@@ -13,6 +13,7 @@
     "start": "turbo run start",
     "test": "turbo run test",
     "format": "turbo run format",
+    "lint": "turbo run lint",
     "check:format": "turbo run check:format",
     "check:lint": "turbo run check:lint",
     "build": "turbo run build"
