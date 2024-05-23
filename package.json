@@ -1,6 +1,6 @@
 {
   "name": "@nickhudkins/malcolm-root",
-  "version": "0.2.1",
+  "version": "0.0.0",
   "description": "A Man-In-The-Middle Proxy for Development!",
   "repository": {
     "url": "git+https://github.com/nickhudkins/malcolm.git"
@@ -16,11 +16,17 @@
     "lint": "turbo run lint",
     "check:format": "turbo run check:format",
     "check:lint": "turbo run check:lint",
-    "build": "turbo run build"
+    "build": "turbo run build",
+    "version:patch": "npm version patch -w packages/proxy -w packages/contrib",
+    "version:minor": "npm version minor -w packages/proxy -w packages/contrib",
+    "version:major": "npm version major -w packages/proxy -w packages/contrib"
   },
   "type": "module",
-  "author": "Nick Hudkins",
-  "license": "ISC",
+  "author": "Nick Hudkins <nick@nickhudkins.com>",
+  "contributors": [
+    "Sean Boult <sean@boult.me>"
+  ],
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.12.12",
     "eslint": "^9.3.0",
