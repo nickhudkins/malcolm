@@ -3,6 +3,7 @@
   "pipeline": {
     "start": {},
     "test": {},
+    "clean": {},
     "format": {},
     "lint": {},
     "check:format": {},

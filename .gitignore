@@ -2,3 +2,4 @@ node_modules
 dist
 proxy.config.ts
 .turbo
+tsconfig.tsbuildinfo

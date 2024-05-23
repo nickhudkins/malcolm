@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "outDir": "./dist",
+    "rootDir": ".",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "composite": true,
+    "resolveJsonModule": true
+  },
+  "include": ["src", "package.json"],
+  "exclude": ["**/*.spec.ts"]
+}
