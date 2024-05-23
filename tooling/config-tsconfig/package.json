@@ -1,17 +1,19 @@
 {
-  "name": "config-eslint",
+  "name": "config-tsconfig",
   "version": "1.0.0",
   "description": "",
   "private": true,
   "main": "index.js",
   "files": [
-    "eslint.config.js"
+    "tsconfig.json"
   ],
   "type": "module",
   "exports": {
-    ".": "./eslint.config.js"
+    ".": "./tsconfig.json",
+    "./tsconfig.json": "./tsconfig.json"
   },
   "keywords": [],
   "author": "",
   "license": "ISC"
 }
+
