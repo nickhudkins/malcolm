@@ -4,11 +4,14 @@ import tseslint from "typescript-eslint";
 const config = tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
-  { ignores: ["dist"], files: ["src/**/*.ts"] },
+  {
+    ignores: ["node_modules/", "dist/"],
+  },
   {
     rules: {
       quotes: ["error", "double"],
       "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-unused-vars": "off",
     },
   },
 );
