@@ -3,10 +3,12 @@ import tseslint from "typescript-eslint";
 
 const config = tseslint.config(
   js.configs.recommended,
-  { ignores: ["dist/"] },
+  ...tseslint.configs.recommended,
+  { ignores: ["dist/"], files: ["src/**/*.ts"] },
   {
     rules: {
       "no-unused-vars": "warn",
+      quotes: ["error", "double"],
     },
   },
 );
