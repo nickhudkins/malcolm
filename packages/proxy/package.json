@@ -46,6 +46,7 @@
     "https-proxy-agent": "^7.0.4",
     "prettier": "*",
     "typescript": "*",
-    "vitest": "*"
+    "vitest": "*",
+    "config-eslint": "*"
   }
 }
