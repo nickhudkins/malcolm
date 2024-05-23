@@ -14,10 +14,10 @@ test("It Works!", async () => {
     port: 6969,
   });
   const get = (url: string) => {
-    return new Promise<void>((resolve, _) => {
+    return new Promise<void>((resolve, _reject) => {
       const agent = new HttpsProxyAgent(`http://localhost:${proxyPort}`);
 
-      https.get(url, { agent }, res => {
+      https.get(url, { agent }, () => {
         resolve();
       });
     });

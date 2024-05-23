@@ -17,13 +17,17 @@
   },
   "type": "module",
   "scripts": {
-    "format": "prettier --write .",
+    "format": "prettier --write . --ignore-path ../../.gitignore",
+    "lint": "eslint --fix",
     "check:format": "prettier --check \"**/*.{ts,js,md}\"",
+    "check:lint": "eslint",
     "tsc:watch": "tsc -w",
     "build": "tsc"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "config-eslint": "*"
+  }
 }

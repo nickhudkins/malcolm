@@ -1,0 +1,16 @@
+{
+  "name": "config-eslint",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "files": [
+    "eslint.config.js"
+  ],
+  "type": "module",
+  "exports": {
+    ".": "./eslint.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

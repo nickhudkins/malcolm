@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { CompletedRequest, MaybePromise } from "mockttp";
 import {
   CallbackRequestResult,
@@ -12,7 +13,8 @@ export interface ProxyConfig<ContextT> {
   handleResponse?: (res: PassThroughResponse, ctx: ContextT) => MaybePromise<CallbackResponseResult | void> | void;
 }
 
-export interface ProxyInitializationOptions extends ProxyConfig<any> {}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface ProxyInitializationOptions extends ProxyConfig<unknown> {}
 export interface CreateProxyOptions {
   port: number;
 }

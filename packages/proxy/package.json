@@ -23,8 +23,10 @@
     "start:dev": "NODE_OPTIONS='--no-deprecation' npx tsx watch src/cli.ts",
     "start": "NODE_OPTIONS='--no-deprecation' npx tsx src/cli.ts",
     "test": "vitest run",
-    "format": "prettier --write .",
+    "format": "prettier --write . --ignore-path ../../.gitignore",
+    "lint": "eslint --fix",
     "check:format": "prettier --check \"**/*.{ts,js,md}\"",
+    "check:lint": "eslint",
     "tsc:watch": "tsc -w",
     "build": "tsc"
   },
@@ -45,6 +47,7 @@
     "https-proxy-agent": "^7.0.4",
     "prettier": "*",
     "typescript": "*",
-    "vitest": "*"
+    "vitest": "*",
+    "config-eslint": "*"
   }
 }

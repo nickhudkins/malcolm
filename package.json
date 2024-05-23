@@ -6,20 +6,25 @@
     "url": "https://github.com/nickhudkins/malcolm"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "tooling/*"
   ],
   "scripts": {
     "start": "turbo run start",
     "test": "turbo run test",
     "format": "turbo run format",
+    "lint": "turbo run lint",
     "check:format": "turbo run check:format",
+    "check:lint": "turbo run check:lint",
     "build": "turbo run build"
   },
   "type": "module",
   "author": "Nick Hudkins",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.12.12"
+    "@types/node": "^20.12.12",
+    "eslint": "^9.3.0",
+    "typescript-eslint": "^8.0.0-alpha.14"
   },
   "dependencies": {
     "prettier": "^3.2.5",
