@@ -23,7 +23,7 @@
     "start:dev": "NODE_OPTIONS='--no-deprecation' npx tsx watch src/cli.ts",
     "start": "NODE_OPTIONS='--no-deprecation' npx tsx src/cli.ts",
     "test": "vitest run",
-    "format": "prettier --write .",
+    "format": "prettier --write . --ignore-path ../../.gitignore",
     "lint": "eslint --fix",
     "check:format": "prettier --check \"**/*.{ts,js,md}\"",
     "check:lint": "eslint",
