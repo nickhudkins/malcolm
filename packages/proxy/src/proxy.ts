@@ -7,6 +7,7 @@ import chalk from "chalk";
 import { LOG_PREFIX } from "./constants.js";
 
 export async function create({ port: proxyPort }: CreateProxyOptions) {
+  const startTime = performance.now();
   const httpsOpts = await ensureCACertificate();
   const server = getLocal({ https: httpsOpts });
   let isServerRunning = false;
@@ -75,9 +76,12 @@ export async function create({ port: proxyPort }: CreateProxyOptions) {
       }),
     });
 
-    console.log(
-      `${LOG_PREFIX} - ${chalk.green("Ready and Willing to Serve!")} (${chalk.blue(`https://localhost:${proxyPort}`)})`,
-    );
+    const startUpTimeInMs = Math.round(performance.now() - startTime);
+    console.log(`${LOG_PREFIX} - ${chalk.green(`Ready (${startUpTimeInMs}ms) and Willing to Serve!`)} `);
+
+    console.log(`
+🌐 Proxy: ${chalk.green(`https://localhost:${proxyPort}`)}
+📄 Proxy pac: ${chalk.green(`https://localhost:${proxyPort}/proxy.pac`)}`);
 
     return server;
   };

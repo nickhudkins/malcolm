@@ -11,6 +11,11 @@ import { program } from "./program.js";
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const packageJson = JSON.parse(await fs.readFile(`${__dirname}/../package.json`, "utf-8"));
 
+// TODO: we can do other stuff here
+const gnenerateUsageBanner = () => {
+  return USAGE_BANNER;
+};
+
 const { proxyPort, userConfigPath } = await yargs(hideBin(process.argv))
   .scriptName("malcolm")
   .version(packageJson.version)
@@ -26,7 +31,7 @@ const { proxyPort, userConfigPath } = await yargs(hideBin(process.argv))
     },
   })
   .env(ENV_VAR_PREFIX)
-  .usage(USAGE_BANNER)
+  .usage(gnenerateUsageBanner())
   .parseAsync();
 
 await program({
