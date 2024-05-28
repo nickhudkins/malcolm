@@ -26,20 +26,27 @@ async function getFileHash(filePath: string) {
   return createHash("md5").update(fileBuffer).digest("hex");
 }
 
-export async function createFileWatcher(filePath: string, onChange: () => void) {
-  try {
-    const configWatcher = fs.watch(filePath);
-    let previousFileHash = getFileHash(filePath);
+export function createFileWatcher(filePath: string, onChange: () => void) {
+  const ac = new AbortController();
+  (async () => {
+    try {
+      const configWatcher = fs.watch(filePath, { signal: ac.signal });
+      let previousFileHash = getFileHash(filePath);
 
-    for await (const event of configWatcher) {
-      if (event.eventType !== "change") continue;
-      const newFileHash = getFileHash(filePath);
-      if (previousFileHash !== newFileHash) {
-        onChange();
-        previousFileHash = newFileHash;
+      for await (const event of configWatcher) {
+        if (event.eventType !== "change") continue;
+        const newFileHash = getFileHash(filePath);
+        if (previousFileHash !== newFileHash) {
+          onChange();
+          previousFileHash = newFileHash;
+        }
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === "AbortError") {
+        console.log("File watcher aborted");
       }
     }
-  } catch (err: unknown) {
-    if (err instanceof Error && err.name === "AbortError") throw err;
-  }
+  })();
+
+  return ac.abort.bind(ac);
 }

@@ -40,6 +40,7 @@
     "@braintree/sanitize-url": "^7.0.1",
     "@types/yargs": "^17.0.32",
     "chalk": "^5.3.0",
+    "cheerio": "^1.0.0-rc.12",
     "get-port": "^7.1.0",
     "mockttp": "^3.10.2",
     "network": "^0.7.0",
@@ -48,11 +49,11 @@
   },
   "devDependencies": {
     "@types/node": "*",
+    "config-eslint": "*",
+    "config-tsconfig": "*",
     "https-proxy-agent": "^7.0.4",
     "prettier": "*",
     "typescript": "*",
-    "vitest": "*",
-    "config-tsconfig": "*",
-    "config-eslint": "*"
+    "vitest": "*"
   }
 }

@@ -2,7 +2,10 @@ import getPort from "get-port";
 import { getProxyConfig } from "./config.js";
 import { createFileWatcher } from "./utils.js";
 import { create } from "./proxy.js";
+import fs from "fs";
 import path from "path";
+
+import { spawn, fork } from "child_process";
 
 interface ProgramOptions {
   proxyPort: number;
@@ -18,12 +21,17 @@ export async function program(opts: ProgramOptions) {
 
   const start = await create({ port: proxyPort });
 
+  const stopWatching = createFileWatcher(fullyQualifiedPath, run);
   // Wrap up getting config and starting
   async function run() {
     const config = await getProxyConfig(fullyQualifiedPath);
-    await start(config);
-  }
+    const server = await start(config);
 
-  createFileWatcher(fullyQualifiedPath, run);
+    const f = fs.openSync("log.out", "a");
+    process.on("SIGINT", async () => {
+      const thing = spawn("npx tsx src/cleanup.ts", { shell: true, detached: true, stdio: ["ignore", f, f, "ipc"] });
+      thing.unref();
+    });
+  }
   await run();
 }

@@ -20,3 +20,6 @@ export const ConfigurationMissingErrorName = "ConfigurationMissingError";
 
 const DESCRIPTION = "A Man in The Middle Proxy so that you can ✨ Test in Prod ✨";
 export const USAGE_BANNER = `${DESCRIPTION}`;
+
+// proxy stuff
+export const PAC_FILE_PATH = "/proxy.pac";
