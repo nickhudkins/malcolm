@@ -21,9 +21,9 @@
   "type": "module",
   "scripts": {
     "clean": "rm -rf dist tsconfig.tsbuildinfo .turbo",
-    "start:dev": "NODE_OPTIONS='--no-deprecation' npx tsx watch src/cli.ts",
-    "start": "NODE_OPTIONS='--no-deprecation' npx tsx src/cli.ts",
-    "test": "vitest run",
+    "start:dev": "NODE_OPTIONS='--no-deprecation' node --watch --import tsx src/cli.ts",
+    "start": "NODE_OPTIONS='--no-deprecation' node --import tsx src/cli.ts",
+    "test": "node dist/cli.js",
     "format": "prettier --write . --ignore-path ../../.gitignore",
     "lint": "eslint --fix",
     "check:format": "prettier --check \"**/*.{ts,js,md}\"",
@@ -44,7 +44,7 @@
     "get-port": "^7.1.0",
     "mockttp": "^3.10.2",
     "network": "^0.7.0",
-    "tsx": "^4.9.1",
+    "tsx": "^4.11.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
