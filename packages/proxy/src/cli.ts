@@ -1,14 +1,19 @@
 #!/usr/bin/env node
 import yargs from "yargs";
+import { promises as fs } from "node:fs";
+import path from "node:path";
 import { hideBin } from "yargs/helpers";
-import { version } from "../package.json";
 
 import { DEFAULT_PROXY_PORT, DEFAULT_PROXY_CONFIG_PATH, ENV_VAR_PREFIX, USAGE_BANNER } from "./constants.js";
 import { program } from "./program.js";
 
+// read the version from package.json
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const packageJson = JSON.parse(await fs.readFile(`${__dirname}/../package.json`, "utf-8"));
+
 const { proxyPort, userConfigPath } = await yargs(hideBin(process.argv))
   .scriptName("malcolm")
-  .version(version)
+  .version(packageJson.version)
   .options({
     proxyPort: {
       alias: ["p", "proxy-port"],
