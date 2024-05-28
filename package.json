@@ -34,8 +34,6 @@
     "typescript-eslint": "^8.0.0-alpha.14"
   },
   "dependencies": {
-    "async-cleanup": "^1.0.0",
-    "async-exit-hook": "^2.0.1",
     "prettier": "^3.2.5",
     "turbo": "^1.13.3",
     "typescript": "^5.4.5",

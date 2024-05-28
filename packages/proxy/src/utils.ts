@@ -26,8 +26,23 @@ async function getFileHash(filePath: string) {
   return createHash("md5").update(fileBuffer).digest("hex");
 }
 
+function withResolvers() {
+  let resolve!: (_: unknown) => void;
+  let reject!: (_: unknown) => void;
+  const promise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return {
+    resolve,
+    reject,
+    promise,
+  };
+}
+
 export function createFileWatcher(filePath: string, onChange: () => void) {
   const ac = new AbortController();
+  const { promise, resolve } = withResolvers();
   (async () => {
     try {
       const configWatcher = fs.watch(filePath, { signal: ac.signal });
@@ -43,10 +58,16 @@ export function createFileWatcher(filePath: string, onChange: () => void) {
       }
     } catch (err: unknown) {
       if (err instanceof Error && err.name === "AbortError") {
-        console.log("File watcher aborted");
+        console.log("Stopped file watcher");
+        resolve({});
       }
     }
   })();
 
-  return ac.abort.bind(ac);
+  return () => {
+    console.log("Stopping file watcher");
+    ac.abort();
+
+    return promise;
+  };
 }

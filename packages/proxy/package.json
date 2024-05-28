@@ -23,7 +23,7 @@
     "clean": "rm -rf dist tsconfig.tsbuildinfo .turbo",
     "start:dev": "NODE_OPTIONS='--no-deprecation' node --watch --import tsx src/cli.ts",
     "start": "NODE_OPTIONS='--no-deprecation' node --import tsx src/cli.ts",
-    "test": "node dist/cli.js",
+    "test": "vitest run",
     "format": "prettier --write . --ignore-path ../../.gitignore",
     "lint": "eslint --fix",
     "check:format": "prettier --check \"**/*.{ts,js,md}\"",
