@@ -3,6 +3,7 @@ import { getProxyConfig } from "./config.js";
 import { createFileWatcher } from "./utils.js";
 import { create } from "./proxy.js";
 import path from "path";
+import { unsetProxy } from "./system.js";
 
 interface ProgramOptions {
   proxyPort: number;
@@ -18,12 +19,28 @@ export async function program(opts: ProgramOptions) {
 
   const start = await create({ port: proxyPort });
 
+  const stopWatching = createFileWatcher(fullyQualifiedPath, run);
   // Wrap up getting config and starting
   async function run() {
     const config = await getProxyConfig(fullyQualifiedPath);
-    await start(config);
+    const server = await start(config);
+
+    // TODO: error handle these funky funcs
+    process.on("SIGINT", async () => {
+      // unset the proxy
+      await unsetProxy();
+
+      // stop the server
+      await server.stop();
+
+      // stop file watching
+      await stopWatching();
+
+      // TODO: maybe untrust the cert?
+
+      process.exit(0);
+    });
   }
 
-  createFileWatcher(fullyQualifiedPath, run);
   await run();
 }

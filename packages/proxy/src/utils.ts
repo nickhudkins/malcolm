@@ -26,20 +26,48 @@ async function getFileHash(filePath: string) {
   return createHash("md5").update(fileBuffer).digest("hex");
 }
 
-export async function createFileWatcher(filePath: string, onChange: () => void) {
-  try {
-    const configWatcher = fs.watch(filePath);
-    let previousFileHash = getFileHash(filePath);
+function createDeferred() {
+  let resolve!: () => void;
+  let reject!: (_: unknown) => void;
+  const promise = new Promise<void>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return {
+    resolve,
+    reject,
+    promise,
+  };
+}
 
-    for await (const event of configWatcher) {
-      if (event.eventType !== "change") continue;
-      const newFileHash = getFileHash(filePath);
-      if (previousFileHash !== newFileHash) {
-        onChange();
-        previousFileHash = newFileHash;
+export function createFileWatcher(filePath: string, onChange: () => void) {
+  const ac = new AbortController();
+  const { promise, resolve } = createDeferred();
+  (async () => {
+    try {
+      const configWatcher = fs.watch(filePath, { signal: ac.signal });
+      let previousFileHash = getFileHash(filePath);
+
+      for await (const event of configWatcher) {
+        if (event.eventType !== "change") continue;
+        const newFileHash = getFileHash(filePath);
+        if (previousFileHash !== newFileHash) {
+          onChange();
+          previousFileHash = newFileHash;
+        }
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === "AbortError") {
+        console.log("Stopped file watcher");
+        resolve();
       }
     }
-  } catch (err: unknown) {
-    if (err instanceof Error && err.name === "AbortError") throw err;
-  }
+  })();
+
+  return () => {
+    ac.abort();
+    console.log("🛑 Stopped the file watcher");
+
+    return promise;
+  };
 }

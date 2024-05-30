@@ -1,4 +1,4 @@
-import { getLocal, matchers, requestHandlers } from "mockttp";
+import { Mockttp, getLocal, matchers, requestHandlers } from "mockttp";
 
 import { ProxyInitializationOptions, CreateProxyOptions } from "./types.js";
 import { prepareSystem, ensureCACertificate } from "./system.js";
@@ -11,7 +11,7 @@ export async function create({ port: proxyPort }: CreateProxyOptions) {
   const server = getLocal({ https: httpsOpts });
   let isServerRunning = false;
 
-  return async function start(config: ProxyInitializationOptions) {
+  return async function start(config: ProxyInitializationOptions): Promise<Mockttp> {
     const { hosts, shouldIntercept, handleRequest, handleResponse } = config;
 
     const requestCtx = new Map<string, unknown>();
@@ -78,5 +78,7 @@ export async function create({ port: proxyPort }: CreateProxyOptions) {
     console.log(
       `${LOG_PREFIX} - ${chalk.green("Ready and Willing to Serve!")} (${chalk.blue(`https://localhost:${proxyPort}`)})`,
     );
+
+    return server;
   };
 }

@@ -6,7 +6,7 @@ import { platform } from "os";
 
 import { Mockttp, generateCACertificate } from "mockttp";
 
-import { DEFAULT_CERT_PATH, DEFAULT_CONFIG_DIR, DEFAULT_KEY_PATH } from "./constants.js";
+import { DEFAULT_CERT_PATH, DEFAULT_CONFIG_DIR, DEFAULT_KEY_PATH, PAC_FILE_PATH } from "./constants.js";
 import { pacFilterFunction } from "./utils.js";
 
 interface GeneratePacFileInput {
@@ -70,9 +70,7 @@ export async function prepareSystem({ hosts, server, proxyPort }: MalcolmSystemC
   const pacFileContents = await generatePacFile({ hosts, proxyPort });
   // Serve the PAC file.
 
-  const pacFilePath = "/proxy.pac";
-
-  server.forGet(pacFilePath).thenReply(200, pacFileContents, {
+  server.forGet(PAC_FILE_PATH).thenReply(200, pacFileContents, {
     "content-type": "application/x-ns-proxy-autoconfig",
   });
 
@@ -85,7 +83,7 @@ export async function prepareSystem({ hosts, server, proxyPort }: MalcolmSystemC
       const networkInterfaceName = getNetworkAliasForMac(interfacesName);
 
       execSync(
-        `networksetup -setautoproxyurl "${networkInterfaceName}" "https://localhost:${proxyPort}${pacFilePath}"`,
+        `networksetup -setautoproxyurl "${networkInterfaceName}" "https://localhost:${proxyPort}${PAC_FILE_PATH}"`,
       );
     }
   });
@@ -107,4 +105,27 @@ export function getNetworkAliasForMac(networkName: string) {
   });
 
   return cleanedName;
+}
+
+export async function unsetProxy(): Promise<void> {
+  return new Promise((resolve, _) => {
+    getActiveInterface((err, { desc: interfacesName }) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+
+      // TODO: Cross Platform Support, and error handling.
+      if (platform() === "darwin") {
+        // make sure the interface is right because reasons
+        const networkInterfaceName = getNetworkAliasForMac(interfacesName);
+
+        const command = `networksetup -setautoproxyurl "${networkInterfaceName}" "off"`;
+        execSync(command);
+
+        console.log(`Proxy removed from [${interfacesName}]`);
+        resolve();
+      }
+    });
+  });
 }
