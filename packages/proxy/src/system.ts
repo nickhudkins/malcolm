@@ -75,8 +75,6 @@ export async function prepareSystem({ hosts, server, proxyPort }: MalcolmSystemC
   });
 
   getActiveInterface((_, { desc: interfacesName }) => {
-    console.log(`Configuring [${interfacesName}]...`);
-
     // TODO: Cross Platform Support, and error handling.
     if (platform() === "darwin") {
       // make sure the interface is right because reasons
