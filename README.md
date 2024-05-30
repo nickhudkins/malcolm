@@ -27,13 +27,17 @@ export default defineConfig({
     // I have `ctx`! which is provided by the above
     return;
   },
-};
+});
 ```
 
 Run `malcolm`
 
 ### Development
 
-Working in this directory?Clone and `npm run start:dev`
+1. Clone
+1. Create a `proxy.config.ts` in the `packages/proxy` directory
+1. `npm run i`
+1. `npm run build`
+1. `npm run start:dev`
 
 ❤️ Made with Love by @nickhudkins
