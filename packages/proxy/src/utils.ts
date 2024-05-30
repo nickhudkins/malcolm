@@ -26,10 +26,12 @@ async function getFileHash(filePath: string) {
   return createHash("md5").update(fileBuffer).digest("hex");
 }
 
-function withResolvers() {
-  let resolve!: (_: unknown) => void;
+function createDeferred() {
+  let resolve!: () => void;
   let reject!: (_: unknown) => void;
   const promise = new Promise((res, rej) => {
+    // TODO: nick fix this
+    // @ts-expect-error this will go away when nick fixes it
     resolve = res;
     reject = rej;
   });
@@ -42,7 +44,7 @@ function withResolvers() {
 
 export function createFileWatcher(filePath: string, onChange: () => void) {
   const ac = new AbortController();
-  const { promise, resolve } = withResolvers();
+  const { promise, resolve } = createDeferred();
   (async () => {
     try {
       const configWatcher = fs.watch(filePath, { signal: ac.signal });
@@ -59,7 +61,7 @@ export function createFileWatcher(filePath: string, onChange: () => void) {
     } catch (err: unknown) {
       if (err instanceof Error && err.name === "AbortError") {
         console.log("Stopped file watcher");
-        resolve({});
+        resolve();
       }
     }
   })();
