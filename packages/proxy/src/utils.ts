@@ -29,9 +29,7 @@ async function getFileHash(filePath: string) {
 function createDeferred() {
   let resolve!: () => void;
   let reject!: (_: unknown) => void;
-  const promise = new Promise((res, rej) => {
-    // TODO: nick fix this
-    // @ts-expect-error this will go away when nick fixes it
+  const promise = new Promise<void>((res, rej) => {
     resolve = res;
     reject = rej;
   });
