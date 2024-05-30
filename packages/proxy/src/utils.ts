@@ -65,8 +65,8 @@ export function createFileWatcher(filePath: string, onChange: () => void) {
   })();
 
   return () => {
-    console.log("Stopping file watcher");
     ac.abort();
+    console.log("🛑 Stopped the file watcher");
 
     return promise;
   };

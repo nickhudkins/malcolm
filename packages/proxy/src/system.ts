@@ -107,7 +107,6 @@ export function getNetworkAliasForMac(networkName: string) {
   return cleanedName;
 }
 
-// TODO: make a better impl if you feel like it but for now this works
 export async function unsetProxy(): Promise<void> {
   return new Promise((resolve, _) => {
     getActiveInterface((err, { desc: interfacesName }) => {

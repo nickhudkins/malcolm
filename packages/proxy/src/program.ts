@@ -25,6 +25,7 @@ export async function program(opts: ProgramOptions) {
     const config = await getProxyConfig(fullyQualifiedPath);
     const server = await start(config);
 
+    // TODO: error handle these funky funcs
     process.on("SIGINT", async () => {
       // unset the proxy
       await unsetProxy();
