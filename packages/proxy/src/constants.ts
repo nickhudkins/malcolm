@@ -11,6 +11,8 @@ export const DEFAULT_PROXY_CONFIG_PATH = "proxy.config.ts";
 export const DEFAULT_CERT_PATH = join(DEFAULT_CONFIG_DIR, "malcom-cert.pem");
 export const DEFAULT_KEY_PATH = join(DEFAULT_CONFIG_DIR, "malcolm-key.pem");
 
+export const DEFAULT_CERT_COMMON_NAME = "Malcolm Cert";
+
 export const DEFAULT_PROXY_PORT = 6969;
 
 export const LOG_PREFIX = "[" + chalk.yellow("👴🏻 Malcolm") + "]";
