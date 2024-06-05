@@ -22,6 +22,8 @@
     "check:format": "prettier --check \"**/*.{ts,js,md}\"",
     "check:lint": "eslint",
     "tsc:watch": "tsc -w",
+    "test": "vitest run",
+    "test:watch": "vites",
     "build": "tsc"
   },
   "author": "Nick Hudkins <nick@nickhudkins.com>",
