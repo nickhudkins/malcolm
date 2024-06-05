@@ -1,12 +1,17 @@
-import { mkdirSync, writeFileSync, readFileSync, existsSync } from "fs";
+import { mkdirSync, writeFileSync, rmSync, readFileSync, existsSync } from "fs";
 import { execSync } from "child_process";
 import { get_active_interface as getActiveInterface } from "network";
-
 import { platform } from "os";
 
 import { Mockttp, generateCACertificate } from "mockttp";
 
-import { DEFAULT_CERT_PATH, DEFAULT_CONFIG_DIR, DEFAULT_KEY_PATH, PAC_FILE_PATH } from "./constants.js";
+import {
+  DEFAULT_CERT_COMMON_NAME,
+  DEFAULT_CERT_PATH,
+  DEFAULT_CONFIG_DIR,
+  DEFAULT_KEY_PATH,
+  PAC_FILE_PATH,
+} from "./constants.js";
 import { pacFilterFunction } from "./utils.js";
 
 interface GeneratePacFileInput {
@@ -34,6 +39,25 @@ interface MalcolmSystemConfig {
   };
 }
 
+export function removeCACertificate() {
+  console.log("↩️ Removing CA Certificate, this requires sudo to untrust the cert...");
+  // remove from the file system too
+  rmSync(DEFAULT_CERT_PATH);
+  rmSync(DEFAULT_KEY_PATH);
+
+  // TODO: error handle and cross platform support
+  execSync(`sudo security delete-certificate -c "${DEFAULT_CERT_COMMON_NAME}"`, {
+    stdio: "inherit",
+  });
+}
+
+function trustCACertificate() {
+  // TODO: handle error and cross platform support
+  console.log("🔐 Trusting CA Certificate, this requires sudo to trust the cert...");
+  execSync(`sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ${DEFAULT_CERT_PATH}`);
+  console.log("🔐 Done Trusting CA Certificate");
+}
+
 export async function ensureCACertificate(): Promise<MalcolmSystemConfig["https"]> {
   // Ensure Directory Exists
   mkdirSync(DEFAULT_CONFIG_DIR, { recursive: true });
@@ -43,23 +67,26 @@ export async function ensureCACertificate(): Promise<MalcolmSystemConfig["https"
 
   // FIXME: This should not only check that the cert exists, but that it is trusted.
   if (certExists && keyExists) {
+    console.log("🔐 CA Certificate already exists, skipping generation...");
     return {
       cert: readFileSync(DEFAULT_CERT_PATH, "utf-8"),
       key: readFileSync(DEFAULT_KEY_PATH, "utf-8"),
     };
   }
 
+  console.log("🔐 CA Certificate don't exist, generating...");
   // Generate cert
   const { key, cert } = await generateCACertificate({
-    commonName: "Malcolm Cert",
+    commonName: DEFAULT_CERT_COMMON_NAME,
     organizationName: "Nick Hudkins",
   });
+
   // Write the cert to disk.
   writeFileSync(DEFAULT_CERT_PATH, cert, { encoding: "utf-8" });
   writeFileSync(DEFAULT_KEY_PATH, key, { encoding: "utf-8" });
 
   // TODO: Cross Platform Support, and error handling.
-  execSync(`sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ${DEFAULT_CERT_PATH}`);
+  trustCACertificate();
   return { key, cert };
 }
 
