@@ -5,6 +5,7 @@
   "repository": {
     "url": "git+https://github.com/nickhudkins/malcolm.git"
   },
+  "packageManager": "npm@10.5.0",
   "workspaces": [
     "packages/*",
     "tooling/*"
@@ -13,9 +14,11 @@
     "start": "turbo run start",
     "start:dev": "turbo run start:dev",
     "test": "turbo run test",
-    "format": "turbo run format",
-    "lint": "turbo run lint",
+    "fix": "turbo run fix",
+    "fix:format": "turbo run fix:format",
+    "fix:lint": "turbo run fix:lint",
     "clean": "turbo run clean",
+    "check": "turbo run check",
     "check:format": "turbo run check:format",
     "check:lint": "turbo run check:lint",
     "build": "turbo run build",
@@ -35,8 +38,9 @@
     "typescript-eslint": "^8.0.0-alpha.14"
   },
   "dependencies": {
+    "eslint-config-prettier": "^9.1.0",
     "prettier": "^3.2.5",
-    "turbo": "^1.13.3",
+    "turbo": "^2.0.1",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
   }

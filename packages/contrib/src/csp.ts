@@ -4,6 +4,7 @@ import { CallbackResponseMessageResult } from "mockttp/dist/rules/requests/reque
 interface WithoutCSPOptions {
   removeHttpEquiv: boolean;
 }
+
 export async function withoutCSP(
   resp: PassThroughResponse,
   opts?: WithoutCSPOptions,
