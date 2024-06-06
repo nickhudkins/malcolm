@@ -26,7 +26,8 @@
   "type": "module",
   "author": "Nick Hudkins <nick@nickhudkins.com>",
   "contributors": [
-    "Sean Boult <sean@boult.me>"
+    "Sean Boult <sean@boult.me>",
+    "Kirin Patel <contact@kirinpatel.com>"
   ],
   "license": "MIT",
   "devDependencies": {
