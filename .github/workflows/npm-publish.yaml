@@ -6,6 +6,9 @@ on:
 
 jobs:
   publish:
+    strategy:
+      matrix:
+        pkg: ["packages/proxy", "packages/contrib"]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,7 +23,7 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           provenance: true
-          package: "packages/proxy"
+          package: ${{ matrix.pkg }}
 permissions:
   contents: write
   id-token: write

@@ -17,11 +17,14 @@
   },
   "type": "module",
   "scripts": {
-    "format": "prettier --write . --ignore-path ../../.gitignore",
-    "lint": "eslint --fix",
-    "check:format": "prettier --check \"**/*.{ts,js,md}\"",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo .turbo",
+    "fix:format": "prettier --write . --ignore-path ../../.gitignore",
+    "fix:lint": "eslint --fix",
+    "check:format": "prettier --check . --ignore-path ../../.gitignore",
     "check:lint": "eslint",
     "tsc:watch": "tsc -w",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "build": "tsc"
   },
   "author": "Nick Hudkins <nick@nickhudkins.com>",

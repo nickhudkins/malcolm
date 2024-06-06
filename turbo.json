@@ -1,14 +1,22 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "tasks": {
     "start": {},
     "start:dev": {},
     "test": {},
     "clean": {},
-    "format": {},
-    "lint": {},
+    "fix": {
+      "dependsOn": ["fix:format", "fix:lint"]
+    },
+    "fix:format": {},
+    "fix:lint": {},
+    "check": {
+      "dependsOn": ["check:format", "check:lint"]
+    },
     "check:format": {},
     "check:lint": {},
-    "build": {}
+    "build": {
+      "dependsOn": ["^build"]
+    }
   }
 }

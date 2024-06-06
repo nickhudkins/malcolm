@@ -1,1 +1,1 @@
-export {};
+export { withoutCSP } from "./csp.js";

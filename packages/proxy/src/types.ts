@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { CompletedRequest, MaybePromise } from "mockttp";
 import {
   CallbackRequestResult,
