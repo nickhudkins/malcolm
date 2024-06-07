@@ -4,12 +4,13 @@ import { ProxyInitializationOptions, CreateProxyOptions } from "./types.js";
 import { prepareSystem, ensureCACertificate } from "./system.js";
 import { pacFilterFunction } from "./utils.js";
 import chalk from "chalk";
-import { LOG_PREFIX } from "./constants.js";
+import { Logger } from "./logger.js";
 
 export async function create({ port: proxyPort }: CreateProxyOptions) {
   const startTime = performance.now();
   const httpsOpts = await ensureCACertificate();
   const server = getLocal({ https: httpsOpts });
+  const logger = Logger.getLogger();
   let isServerRunning = false;
 
   return async function start(config: ProxyInitializationOptions): Promise<Mockttp> {
@@ -77,11 +78,9 @@ export async function create({ port: proxyPort }: CreateProxyOptions) {
     });
 
     const startUpTimeInMs = Math.round(performance.now() - startTime);
-    console.log(`${LOG_PREFIX} - ${chalk.green(`Ready (${startUpTimeInMs}ms) and Willing to Serve!`)} `);
-
-    console.log(`
-🌐 Proxy: ${chalk.green(`https://localhost:${proxyPort}`)}
-📄 Proxy pac: ${chalk.green(`https://localhost:${proxyPort}/proxy.pac`)}`);
+    logger.info(chalk.green(`Ready (${startUpTimeInMs}ms) and Willing to Serve!`));
+    logger.info(`🌐 Proxy: ${chalk.green(`https://localhost:${proxyPort}`)}`);
+    logger.info(`📄 Proxy pac: ${chalk.green(`https://localhost:${proxyPort}/proxy.pac`)}`);
 
     return server;
   };

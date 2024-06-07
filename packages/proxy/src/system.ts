@@ -13,6 +13,7 @@ import {
   PAC_FILE_PATH,
 } from "./constants.js";
 import { pacFilterFunction } from "./utils.js";
+import { Logger } from "./logger.js";
 
 interface GeneratePacFileInput {
   proxyPort: number;
@@ -40,7 +41,8 @@ interface MalcolmSystemConfig {
 }
 
 export function removeCACertificate() {
-  console.log("↩️ Removing CA Certificate, this requires sudo to untrust the cert...");
+  const logger = Logger.getLogger();
+  logger.info("↩️ Removing CA Certificate, this requires sudo to untrust the cert...");
   // remove from the file system too
   rmSync(DEFAULT_CERT_PATH);
   rmSync(DEFAULT_KEY_PATH);
@@ -52,13 +54,18 @@ export function removeCACertificate() {
 }
 
 function trustCACertificate() {
+  const logger = Logger.getLogger();
   // TODO: handle error and cross platform support
-  console.log("🔐 Trusting CA Certificate, this requires sudo to trust the cert...");
-  execSync(`sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ${DEFAULT_CERT_PATH}`);
-  console.log("🔐 Done Trusting CA Certificate");
+  logger.info("🔐 Trusting CA Certificate, this requires sudo to trust the cert...");
+  execSync(
+    `sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ${DEFAULT_CERT_PATH}`,
+    { stdio: "inherit" },
+  );
+  logger.info("🔐 Done Trusting CA Certificate");
 }
 
 export async function ensureCACertificate(): Promise<MalcolmSystemConfig["https"]> {
+  const logger = Logger.getLogger();
   // Ensure Directory Exists
   mkdirSync(DEFAULT_CONFIG_DIR, { recursive: true });
 
@@ -67,14 +74,14 @@ export async function ensureCACertificate(): Promise<MalcolmSystemConfig["https"
 
   // FIXME: This should not only check that the cert exists, but that it is trusted.
   if (certExists && keyExists) {
-    console.log("🔐 CA Certificate already exists, skipping generation...");
+    logger.info("🔐 CA Certificate already exists, skipping generation...");
     return {
       cert: readFileSync(DEFAULT_CERT_PATH, "utf-8"),
       key: readFileSync(DEFAULT_KEY_PATH, "utf-8"),
     };
   }
 
-  console.log("🔐 CA Certificate don't exist, generating...");
+  logger.info("🔐 CA Certificate don't exist, generating...");
   // Generate cert
   const { key, cert } = await generateCACertificate({
     commonName: DEFAULT_CERT_COMMON_NAME,
@@ -135,6 +142,7 @@ export function getNetworkAliasForMac(networkName: string) {
 export async function unsetProxy(): Promise<void> {
   return new Promise((resolve, _) => {
     getActiveInterface((err, { desc: interfacesName }) => {
+      const logger = Logger.getLogger();
       if (err) {
         console.error(err);
         return;
@@ -148,7 +156,7 @@ export async function unsetProxy(): Promise<void> {
         const command = `networksetup -setautoproxyurl "${networkInterfaceName}" "off"`;
         execSync(command);
 
-        console.log(`Proxy removed from [${interfacesName}]`);
+        logger.info(`Proxy removed from [${interfacesName}]`);
         resolve();
       }
     });
