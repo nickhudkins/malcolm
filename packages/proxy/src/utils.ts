@@ -1,6 +1,7 @@
 import { promises as fs } from "fs";
 import { createHash } from "crypto";
 import { ProxyConfig } from "./types.js";
+import { Logger } from "./logger.js";
 
 /** Helper function to define a malcolm config */
 export function defineConfig<ContextT>(config: ProxyConfig<ContextT>) {
@@ -43,6 +44,7 @@ function createDeferred() {
 export function createFileWatcher(filePath: string, onChange: () => void) {
   const ac = new AbortController();
   const { promise, resolve } = createDeferred();
+  const logger = Logger.getLogger();
   (async () => {
     try {
       const configWatcher = fs.watch(filePath, { signal: ac.signal });
@@ -58,7 +60,7 @@ export function createFileWatcher(filePath: string, onChange: () => void) {
       }
     } catch (err: unknown) {
       if (err instanceof Error && err.name === "AbortError") {
-        console.log("Stopped file watcher");
+        logger.info("Stopped file watcher");
         resolve();
       }
     }
@@ -66,7 +68,7 @@ export function createFileWatcher(filePath: string, onChange: () => void) {
 
   return () => {
     ac.abort();
-    console.log("🛑 Stopped the file watcher");
+    logger.info("🛑 Stopped the file watcher");
 
     return promise;
   };

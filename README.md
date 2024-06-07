@@ -38,6 +38,7 @@ Run `malcolm`
 1. Create a `proxy.config.ts` in the `packages/proxy` directory
 1. `npm run i`
 1. `npm run build`
-1. `npm run start:dev`
+1. `npm run start:dev -w packages/proxy`
+    - Note: Malcom should not be run with turbo due to STDIO issues where an input prompt is not provided within the execution content
 
 ❤️ Made with Love by @nickhudkins
