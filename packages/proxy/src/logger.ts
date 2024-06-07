@@ -10,7 +10,7 @@ export const Logger = (function () {
           format: winston.format.json(),
           transports: [
             // TODO: Consider file transport for logging network activity
-            new winston.transports.Console({ format: winston.format.cli() })
+            new winston.transports.Console({ format: winston.format.cli() }),
           ],
         });
       }
