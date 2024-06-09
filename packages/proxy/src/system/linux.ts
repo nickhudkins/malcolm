@@ -1,35 +1,37 @@
-// import { execSync } from "child_process";
-
 import type { MalcolmSystemFunctions } from "./system.js";
+
+// https://docs.mitmproxy.org/stable/howto-transparent/
 
 // TODO: Impelemnt, maybe fix types too!
 export default {
-  buildRemoveCertificateCommand(_certName) {
+  buildRemoveCertificateCommand() {
     return "sudo update-ca-certificates --fresh";
   },
-  buildSetProxyCommand(_networkInterfaceName, _proxyPort) {
-    // TODO: Figure out what needs to be done here
-    return "echo Hello";
+  buildSetProxyCommand(_networkInterface, proxyPort) {
+    // TODO: Validate this iptable stuff
+    return `sudo sysctl -w net.ipv4.ip_forward=1; \
+    sudo sysctl -w net.ipv6.conf.all.forwarding=1; \
+    sudo sysctl -w net.ipv4.conf.all.send_redirects=0; \
+    sudo iptables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner root --dport 80 -j REDIRECT --to-port ${proxyPort}; \
+    sudo iptables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner root --dport 443 -j REDIRECT --to-port ${proxyPort}; \
+    sudo ip6tables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner root --dport 80 -j REDIRECT --to-port ${proxyPort}; \
+    sudo ip6tables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner root --dport 443 -j REDIRECT --to-port ${proxyPort};`;
   },
-  buildTrustCertificateCommand(_certName) {
+  buildTrustCertificateCommand() {
     return "sudo update-ca-certificates";
   },
-  buildUnsetProxyCommand(_networkInterfaceName) {
-    // TODO: Figure out what needs to be done here
-    return "echo Hello";
+  buildUnsetProxyCommand(_networkInterface) {
+    // TODO: Validate iptable stuff and pass in port
+    return `sudo sysctl -w net.ipv4.ip_forward=1; \
+    sudo sysctl -w net.ipv6.conf.all.forwarding=1; \
+    sudo sysctl -w net.ipv4.conf.all.send_redirects=0; \
+    sudo iptables -t nat -D OUTPUT -p tcp -m owner ! --uid-owner root --dport 80 -j REDIRECT --to-port 6969; \
+    sudo iptables -t nat -D OUTPUT -p tcp -m owner ! --uid-owner root --dport 443 -j REDIRECT --to-port 6969; \
+    sudo ip6tables -t nat -D OUTPUT -p tcp -m owner ! --uid-owner root --dport 80 -j REDIRECT --to-port 6969; \
+    sudo ip6tables -t nat -D OUTPUT -p tcp -m owner ! --uid-owner root --dport 443 -j REDIRECT --to-port 6969;`;
   },
   getNetworkInterfaceName(interfaceName) {
-    // TODO: Figure out what needs to be done here
-    // const allNetworkIntefaces = execSync(`ip link show`).toString().split(/^n/im);
-
-    // let cleanedName;
-    // allNetworkIntefaces.filter(networkInterface => {
-    //   const foundInteface = networkInterface.includes(interfaceName);
-
-    //   if (foundInteface) {
-    //     const [_index, dirtyName] = networkInterface.split(" ");
-    //   }
-    // });
+    // No-op for linux, just pass through provided interface name
     return interfaceName;
   },
 } as MalcolmSystemFunctions;
