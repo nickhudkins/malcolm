@@ -41,10 +41,10 @@ export interface MalcolmSystemFunctions {
 let osFunctions: MalcolmSystemFunctions;
 switch (process.platform) {
   case "darwin":
-    osFunctions = require("./darwin.js");
+    osFunctions = require("./darwin.js").default;
     break;
   case "linux":
-    osFunctions = require("./linux.js");
+    osFunctions = require("./linux.js").default;
     break;
   default:
     throw new Error("Specified platform is not supported! Sorry!");
@@ -104,13 +104,13 @@ export async function prepareSystem({ hosts, server, proxyPort }: MalcolmSystemC
   });
 
   return new Promise((resolve, reject) => {
-    getActiveInterface((err, { desc: interfacesName }) => {
+    getActiveInterface((err, { name }) => {
       if (err) {
         reject(err);
         return;
       }
 
-      const networkInterfaceName = osFunctions.getNetworkInterfaceName(interfacesName);
+      const networkInterfaceName = osFunctions.getNetworkInterfaceName(name);
       execSync(osFunctions.buildSetProxyCommand(networkInterfaceName, proxyPort));
       resolve();
     });
@@ -139,16 +139,16 @@ export async function unsetProxy(): Promise<void> {
   const logger = Logger.getLogger();
 
   return new Promise((resolve, reject) => {
-    getActiveInterface((err, { desc: interfacesName }) => {
+    getActiveInterface((err, { name }) => {
       if (err) {
         reject(err);
         return;
       }
 
-      const networkInterfaceName = osFunctions.getNetworkInterfaceName(interfacesName);
+      const networkInterfaceName = osFunctions.getNetworkInterfaceName(name);
       execSync(osFunctions.buildUnsetProxyCommand(networkInterfaceName));
 
-      logger.info(`Proxy removed from [${interfacesName}]`);
+      logger.info(`Proxy removed from [${name}]`);
       resolve();
     });
   });
