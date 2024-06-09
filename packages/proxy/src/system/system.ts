@@ -12,6 +12,9 @@ import {
   PAC_FILE_PATH,
 } from "../constants.js";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
 
 interface GeneratePacFileInput {
   proxyPort: number;
