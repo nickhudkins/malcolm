@@ -42,6 +42,7 @@ switch (process.platform) {
     break;
   case "linux":
     osFunctions = require("./linux.js");
+    break;
   default:
     throw new Error("Specified platform is not supported! Sorry!");
 }
@@ -99,7 +100,7 @@ export async function prepareSystem({ hosts, server, proxyPort }: MalcolmSystemC
     "content-type": "application/x-ns-proxy-autoconfig",
   });
 
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     getActiveInterface((err, { desc: interfacesName }) => {
       if (err) {
         reject(err);

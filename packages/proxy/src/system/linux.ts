@@ -2,9 +2,9 @@ import type { MalcolmSystemFunctions } from "./system.js";
 
 // TODO: Impelemnt, maybe fix types too!
 export default {
-  buildRemoveCertificateCommand(certName) {},
-  buildSetProxyCommand(networkInterfaceName, proxyPort) {},
-  buildTrustCertificateCommand(certName) {},
-  buildUnsetProxyCommand(networkInterfaceName) {},
-  getNetworkInterfaceName(interfaceName) {},
+  buildRemoveCertificateCommand(_certName) {},
+  buildSetProxyCommand(_networkInterfaceName, _proxyPort) {},
+  buildTrustCertificateCommand(_certName) {},
+  buildUnsetProxyCommand(_networkInterfaceName) {},
+  getNetworkInterfaceName(_interfaceName) {},
 } as MalcolmSystemFunctions;
