@@ -3,7 +3,7 @@ import { getProxyConfig } from "./config.js";
 import { createFileWatcher } from "./utils.js";
 import { create } from "./proxy.js";
 import path from "path";
-import { unsetProxy, removeCACertificate } from "./system.js";
+import { unsetProxy, removeCACertificate } from "./system/system.js";
 
 interface ProgramOptions {
   proxyPort: number;

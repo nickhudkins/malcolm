@@ -1,7 +1,7 @@
 import { Mockttp, getLocal, matchers, requestHandlers } from "mockttp";
 
 import { ProxyInitializationOptions, CreateProxyOptions } from "./types.js";
-import { prepareSystem, ensureCACertificate } from "./system.js";
+import { prepareSystem, ensureCACertificate } from "./system/system.js";
 import { pacFilterFunction } from "./utils.js";
 import chalk from "chalk";
 import { Logger } from "./logger.js";
