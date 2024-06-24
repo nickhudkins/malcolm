@@ -1,5 +1,9 @@
 # 👴🏻 Malcolm (in the Middle)
 
+<p align="center">
+  <img src="./logo.jpg" height="128" />
+</p>
+
 It's Man-In-The-Middle-Proxy for Development
 
 ### Usage
