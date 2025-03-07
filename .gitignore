@@ -3,3 +3,4 @@ dist
 proxy.config.ts
 .turbo
 tsconfig.tsbuildinfo
+*.tgz
