@@ -1,0 +1,7 @@
+.turbo
+node_modules
+src
+tsconfig.tsbuildinfo
+*.config.*
+*.tgz
+tsconfig.json
