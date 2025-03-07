@@ -13,6 +13,7 @@ Create a `proxy.config.ts`:
 ```typescript
 
 import { defineConfig } from "@nickhudkins/malcolm";
+import { createProxyMiddleware } from "http-proxy-middleware";
 
 export default defineConfig({
   hosts: ["google.com"],
@@ -31,6 +32,15 @@ export default defineConfig({
     // I have `ctx`! which is provided by the above
     return;
   },
+  setupProxy: (app) => {
+    app.use(
+      '/api',
+      createProxyMiddleware({
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      })
+    );
+  }
 });
 ```
 

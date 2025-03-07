@@ -3,6 +3,7 @@ import { existsSync } from "fs";
 import { noop } from "./utils.js";
 import { ProxyInitializationOptions } from "./types.js";
 import { ConfigurationMissingErrorName } from "./constants.js";
+import { createProxyMiddleware } from "http-proxy-middleware";
 
 export async function getProxyConfig(configPath: string): Promise<ProxyInitializationOptions> {
   await validateUserConfig(configPath);
@@ -32,4 +33,14 @@ class ConfigurationMissingError extends Error {
     super(`[${ConfigurationMissingErrorName}]: Please ensure a \`proxy.config.ts\` file is present.`);
     this.name = ConfigurationMissingErrorName;
   }
+}
+
+export function setupProxy(app) {
+  app.use(
+    '/api',
+    createProxyMiddleware({
+      target: 'http://localhost:5000',
+      changeOrigin: true,
+    })
+  );
 }
